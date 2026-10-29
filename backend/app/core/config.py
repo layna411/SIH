@@ -69,6 +69,9 @@ class Settings(BaseSettings):
     SLA_SCHEDULER_ENABLED: bool = True
     SLA_POLL_INTERVAL_SECONDS: int = 300
     SLA_WARNING_HOURS: int = 24
+    AICTE_ALERT_WARNING_HOURS: int = 48
+    AICTE_ALERT_DEDUP_HOURS: int = 24
+    AICTE_TRANSFER_PENDING_WARNING_HOURS: int = 72
     
     # Rate Limiting & Security Safeguards
     RATE_LIMIT_ENABLED: bool = True

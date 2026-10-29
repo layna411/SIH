@@ -551,6 +551,17 @@ def assign_aicte_case(
     db.add(assignment_action)
     db.commit()
     db.refresh(case)
+
+    # Dispatch assignment alert
+    if assigned_officer:
+        from app.services.aicte_alert_service import AICTEAlertService
+        AICTEAlertService.notify_case_assignment(
+            db=db,
+            case=case,
+            assigned_officer_id=assigned_officer.id,
+            actor=current_user
+        )
+
     return _map_case_to_response(case)
 
 
@@ -619,6 +630,26 @@ def append_case_action(
     db.add(action)
     db.commit()
     db.refresh(action)
+
+    # Trigger escalation alert if escalated
+    if (new_status == AICTECaseStatusEnum.ESCALATED) or (payload.action_type == AICTECaseActionTypeEnum.ESCALATION):
+        from app.services.aicte_alert_service import AICTEAlertService
+        recipients = set(AICTEAlertService.get_unit_member_ids(db, case.current_unit_id))
+        if case.assigned_officer_id:
+            recipients.add(case.assigned_officer_id)
+        for uid in recipients:
+            AICTEAlertService.send_alert(
+                db=db,
+                recipient_id=uid,
+                category="CASE_ESCALATED",
+                severity="CRITICAL",
+                title=f"Case Escalated: {case.case_reference}",
+                message=f"Case {case.case_reference} has been escalated: {payload.action_title}.",
+                link=f"/aicte/cases/{case.id}",
+                reference_id=f"ESCALATION_{case.id}_{action.id}",
+                requires_acknowledgement=True
+            )
+
     return _map_action_to_response(action)
 
 
@@ -766,6 +797,23 @@ def refer_campus_grievance_to_aicte(
 
     db.commit()
     db.refresh(new_case)
+
+    # Notify receiving Bureau members of campus grievance referral
+    from app.services.aicte_alert_service import AICTEAlertService
+    unit_members = AICTEAlertService.get_unit_member_ids(db, unit.id)
+    for uid in unit_members:
+        AICTEAlertService.send_alert(
+            db=db,
+            recipient_id=uid,
+            category="CASE_STATUS",
+            severity="INFO",
+            title=f"New Case Referred: {new_case.case_reference}",
+            message=f"A campus grievance has been referred to {unit.code} as AICTE Case {new_case.case_reference}.",
+            link=f"/aicte/cases/{new_case.id}",
+            reference_id=f"REFER_{new_case.id}",
+            requires_acknowledgement=False
+        )
+
     return _map_case_to_response(new_case)
 
 

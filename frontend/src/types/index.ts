@@ -835,4 +835,78 @@ export interface AICTEOverviewAnalyticsResponse {
   average_age_active_days?: number;
 }
 
+export interface AICTENotification {
+  id: number;
+  user_id: number;
+  title: string;
+  message: string;
+  link?: string;
+  notification_type: string;
+  severity: 'INFO' | 'WARNING' | 'CRITICAL';
+  category?: string;
+  reference_id?: string;
+  is_read: boolean;
+  requires_acknowledgement: boolean;
+  is_acknowledged: boolean;
+  acknowledged_at?: string;
+  created_at: string;
+}
+
+export interface AICTENotificationListResponse {
+  items: AICTENotification[];
+  total: number;
+  unread_count: number;
+  unacknowledged_count: number;
+  page: number;
+  page_size: number;
+}
+
+export interface AICTEAlertSummaryResponse {
+  total_unread: number;
+  total_unacknowledged: number;
+  critical_count: number;
+  warning_count: number;
+  info_count: number;
+  by_category: Record<string, number>;
+  active_overdue_cases_count: number;
+  pending_transfers_count: number;
+  pending_overlaps_count: number;
+  failed_deliveries_count: number;
+}
+
+export interface AICTEOverdueAlertItem {
+  case_id: number;
+  case_reference: string;
+  subject: string;
+  institution_id: number;
+  institution_name: string;
+  current_unit_id: number;
+  current_unit_code: string;
+  current_unit_name: string;
+  assigned_officer_id?: number;
+  assigned_officer_name?: string;
+  status: string;
+  priority: string;
+  next_action_required?: string;
+  next_action_due_at?: string;
+  expected_disposal_at?: string;
+  overdue_type: 'NEXT_ACTION' | 'EXPECTED_DISPOSAL' | 'BOTH' | 'MISSING_DEADLINE';
+  overdue_days: number;
+}
+
+export interface AICTEOverdueAlertListResponse {
+  items: AICTEOverdueAlertItem[];
+  total: number;
+  page: number;
+  page_size: number;
+}
+
+export interface AICTEAlertConfiguration {
+  warning_window_hours: number;
+  dedup_window_hours: number;
+  transfer_pending_hours: number;
+  poll_interval_seconds: number;
+  scheduler_enabled: boolean;
+}
+
 

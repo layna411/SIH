@@ -335,6 +335,23 @@ def review_overlap_candidate(
     db.commit()
     db.refresh(overlap)
 
+    # Notify involved bureaus of review decision
+    from app.services.aicte_alert_service import AICTEAlertService
+    recipients = set(AICTEAlertService.get_unit_member_ids(db, overlap.case_low.current_unit_id))
+    recipients.update(AICTEAlertService.get_unit_member_ids(db, overlap.case_high.current_unit_id))
+    for uid in recipients:
+        AICTEAlertService.send_alert(
+            db=db,
+            recipient_id=uid,
+            category="OVERLAP_DECISION",
+            severity="INFO",
+            title=f"Overlap Reviewed: {overlap.case_low.case_reference} & {overlap.case_high.case_reference}",
+            message=f"Overlap review concluded ({new_status.value}) by {current_user.full_name}.",
+            link=f"/aicte/overlaps/{overlap.id}",
+            reference_id=f"OVERLAP_REVIEW_{overlap.id}_{new_status.value}",
+            requires_acknowledgement=False
+        )
+
     return _format_overlap_response(overlap, current_user, db)
 
 

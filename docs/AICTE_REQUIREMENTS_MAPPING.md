@@ -736,6 +736,57 @@ Detailed entity models, relationship diagrams, and the phased implementation roa
    - Full regression suite: **152 passed, 0 failed in 31.80s**.
    - Frontend production build: `npm run build` completed with **0 errors**.
 
+---
 
+## 15. Phase G Implementation Status (Completed)
 
+**Implementation Date:** October 2026  
+**Status:** **PHASE G COMPLETED**  
+**Schema Migration:** Forward-only migration [`g1b23c4d5e6f_step7_phase_g_notification_lifecycle.py`](file:///e:/Layn/SIH/backend/alembic/versions/g1b23c4d5e6f_step7_phase_g_notification_lifecycle.py) from revision `f0a45b6c7d8e`.
+- Columns added to `notifications`:
+  - `requires_acknowledgement` (BOOLEAN, default 0, NOT NULL)
+  - `is_acknowledged` (BOOLEAN, default 0, NOT NULL, INDEX)
+  - `acknowledged_at` (DATETIME, NULL)
+  - `severity` (VARCHAR(20), default 'INFO', NOT NULL)
+  - `category` (VARCHAR(50), NULL, INDEX)
+  - `reference_id` (VARCHAR(100), NULL, INDEX)
+  - Composite index `ix_notifications_user_category_ref` on `(user_id, category, reference_id)` for high-performance deduplication.
 
+### Delivered Features in Phase G
+1. **Centralized AICTE Alert & Escalation Service (`AICTEAlertService`):**
+   - File: [`backend/app/services/aicte_alert_service.py`](file:///e:/Layn/SIH/backend/app/services/aicte_alert_service.py)
+   - **Lifecycle Disaggregation**: Enforces strict conceptual separation between alert conditions, user notifications, acknowledgements, and case actions. Reading or acknowledging an alert **never** alters or resolves a case's official procedural status.
+   - **Deduplication Engine**: Protects recipients against alert flooding. Checks `(user_id, category, reference_id)` within a configurable deduplication window (default 24h) before generating alerts.
+   - **Periodic SLA Scan**: Integrated into `SLABackgroundScheduler.run_cycle_sync` ([`backend/app/services/scheduler.py`](file:///e:/Layn/SIH/backend/app/services/scheduler.py)). Evaluates active dockets for:
+     - Overdue next action targets (`CRITICAL`, requires acknowledgement).
+     - Approaching next action deadlines within warning hours (`WARNING`).
+     - Overdue expected disposal dates (`CRITICAL`, requires acknowledgement).
+     - Approaching expected disposal dates within warning hours (`WARNING`).
+     - Missing deadline configuration on active cases under process (`WARNING`, compliance alert).
+     - Delayed incoming transfers pending beyond threshold (`CRITICAL`, requires acknowledgement).
+     - Failed outbox email deliveries requiring administrative intervention (`CRITICAL`).
+2. **Cross-Bureau Recipient Resolution & Narrative Shielding:**
+   - Resolves recipients dynamically via `BureauMembership` and `UserRoleEnum`.
+   - Narrative Shielding: Notification titles and messages are strictly sanitized, exposing only case references, organizational units, and authorized milestone categories. Confidential complainant particulars and sensitive investigation notes are never exposed in notification payloads.
+3. **Centralized Notification & Alert Center APIs:**
+   - Router: [`backend/app/api/v1/aicte_notifications.py`](file:///e:/Layn/SIH/backend/app/api/v1/aicte_notifications.py)
+   - Endpoints mounted under `/api/v1/aicte`:
+     - `GET /notifications`: Paginated notifications strictly scoped to caller with server-side filters for `category`, `severity`, `is_read`, and `is_acknowledged`.
+     - `GET /notifications/unread-count`: Returns real-time unread, unacknowledged, and critical badge counts.
+     - `GET /notifications/{id}`: Detailed notification item with recipient ownership verification.
+     - `POST /notifications/{id}/read` & `PUT /notifications/{id}/read`: Mark as read.
+     - `POST /notifications/{id}/acknowledge`: Formally record alert acknowledgement with immutable timestamp without affecting case state.
+     - `POST /notifications/read-all`: Mark all caller's unread notifications as read.
+     - `GET /alerts/summary`: Live aggregated operational summary (unread, unacknowledged, critical, active overdue cases, pending transfers, pending overlaps, failed deliveries).
+     - `GET /alerts/overdue`: Live queue of active cases with overdue deadlines, categorized by `NEXT_ACTION`, `EXPECTED_DISPOSAL`, or `BOTH`.
+     - `GET /alerts/configuration`: Read permitted threshold policies.
+     - `PATCH /alerts/configuration`: Update warning windows and deduplication cooldowns with atomic audit logging.
+4. **Frontend Alert & Notification Suite:**
+   - `AICTENotificationBell.tsx`: Dynamic notification bell with real-time badge count, critical alert pulse, quick preview dropdown, dismiss button, and navigation link.
+   - `AICTENotificationCenter.tsx`: Comprehensive alert hub with filter tabs (All, Unread, Requires Ack, Critical), search bar, category/severity selectors, acknowledge button, live Overdue Cases queue, and administrative threshold settings.
+   - `AICTEIntegratedDashboard.tsx` Integration: Live alert ribbon highlighting critical alerts and pending transfers with direct click-through to the Alert Center.
+   - `Sidebar.tsx`: Navigation link for `REGULATORY_ADMIN` and `SUPER_ADMIN` to `/aicte/notifications`.
+5. **Automated Verification:**
+   - Dedicated suite: [`backend/app/tests/test_step7_phase_g_alerts.py`](file:///e:/Layn/SIH/backend/app/tests/test_step7_phase_g_alerts.py) (10 comprehensive tests covering all 22 Phase G criteria, 100% passing against XAMPP MySQL `eduresolve_ai_test`).
+   - Full regression suite: **162 tests passed, 0 failed in 32.71s**.
+   - Frontend production build: `npm run build` succeeded with **0 errors**.

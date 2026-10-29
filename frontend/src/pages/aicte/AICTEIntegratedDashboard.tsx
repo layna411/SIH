@@ -31,8 +31,8 @@ import {
   ShieldAlert,
   ArrowRight,
   Filter,
-  Calendar,
-  AlertCircle
+  AlertCircle,
+  Bell
 } from 'lucide-react';
 
 import { api } from '../../services/api';
@@ -44,8 +44,10 @@ import {
   AICTEOrganizationalUnitsAnalyticsResponse,
   AICTEInstitutionsAnalyticsResponse,
   AICTETransferAnalyticsResponse,
-  AICTECrossBureauAnalyticsResponse
+  AICTECrossBureauAnalyticsResponse,
+  AICTEAlertSummaryResponse
 } from '../../types';
+import { AICTENotificationBell } from '../../components/aicte/AICTENotificationBell';
 import { CreateAICTECaseModal } from './CreateAICTECaseModal';
 import { ReferGrievanceModal } from './ReferGrievanceModal';
 
@@ -79,6 +81,7 @@ export const AICTEIntegratedDashboard: React.FC = () => {
   const [institutionsData, setInstitutionsData] = useState<AICTEInstitutionsAnalyticsResponse | null>(null);
   const [transferData, setTransferData] = useState<AICTETransferAnalyticsResponse | null>(null);
   const [crossBureauData, setCrossBureauData] = useState<AICTECrossBureauAnalyticsResponse | null>(null);
+  const [alertSummary, setAlertSummary] = useState<AICTEAlertSummaryResponse | null>(null);
   
   // Units for dropdown filter
   const [availableUnits, setAvailableUnits] = useState<{ id: number; code: string; name: string }[]>([]);
@@ -137,6 +140,7 @@ export const AICTEIntegratedDashboard: React.FC = () => {
         instsRes,
         transfersRes,
         crossRes,
+        alertSummaryRes,
       ] = await Promise.all([
         api.get<AICTEOverviewAnalyticsResponse>(`/aicte/analytics/overview${qs}`).catch(() => null),
         api.get<AICTEAgeingResponse>(`/aicte/analytics/ageing${qs}`).catch(() => null),
@@ -146,6 +150,7 @@ export const AICTEIntegratedDashboard: React.FC = () => {
         api.get<AICTEInstitutionsAnalyticsResponse>(`/aicte/analytics/institutions${qs}&limit=10`).catch(() => null),
         api.get<AICTETransferAnalyticsResponse>(`/aicte/analytics/transfers${qs}`).catch(() => null),
         api.get<AICTECrossBureauAnalyticsResponse>('/aicte/analytics/cross-bureau').catch(() => null),
+        api.get<AICTEAlertSummaryResponse>('/aicte/alerts/summary').catch(() => null),
       ]);
 
       setOverview(overviewRes);
@@ -156,6 +161,7 @@ export const AICTEIntegratedDashboard: React.FC = () => {
       setInstitutionsData(instsRes);
       setTransferData(transfersRes);
       setCrossBureauData(crossRes);
+      setAlertSummary(alertSummaryRes);
       setLastRefreshedAt(new Date().toLocaleTimeString());
     } catch {
       // Keep existing data
@@ -205,6 +211,8 @@ export const AICTEIntegratedDashboard: React.FC = () => {
         </div>
 
         <div className="flex flex-wrap items-center gap-2.5">
+          <AICTENotificationBell />
+
           <button
             onClick={fetchDashboardAnalytics}
             disabled={loading}
@@ -214,6 +222,18 @@ export const AICTEIntegratedDashboard: React.FC = () => {
             <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-blue-600' : ''}`} />
             Refresh
           </button>
+
+          <Link
+            to="/aicte/notifications"
+            className="flex items-center gap-1.5 px-3.5 py-2 border border-amber-200 text-amber-800 bg-amber-50 text-xs font-semibold rounded-xl hover:bg-amber-100 transition shadow-sm"
+          >
+            <Bell className="w-4 h-4 text-amber-600" />
+            Alerts {alertSummary && alertSummary.total_unread > 0 && (
+              <span className="bg-amber-600 text-white text-[10px] px-1.5 py-0.2 rounded-full font-bold">
+                {alertSummary.total_unread}
+              </span>
+            )}
+          </Link>
 
           <Link
             to="/aicte/transfers"
@@ -264,6 +284,42 @@ export const AICTEIntegratedDashboard: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* AICTE Live Operational Alert Ribbon */}
+      {alertSummary && (alertSummary.total_unread > 0 || alertSummary.active_overdue_cases_count > 0 || alertSummary.pending_transfers_count > 0 || alertSummary.critical_count > 0) && (
+        <div className="bg-gradient-to-r from-amber-50 via-white to-blue-50 border border-amber-200 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-3 animate-in fade-in duration-150">
+          <div className="flex items-center gap-3">
+            <div className="p-2.5 bg-amber-500 text-white rounded-xl shadow-sm">
+              <AlertTriangle className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h4 className="text-xs font-bold text-slate-900">Operational Alerts Pending Action</h4>
+                {alertSummary.critical_count > 0 && (
+                  <span className="text-[10px] font-bold bg-red-600 text-white px-2 py-0.5 rounded-full animate-pulse">
+                    {alertSummary.critical_count} CRITICAL
+                  </span>
+                )}
+                {alertSummary.active_overdue_cases_count > 0 && (
+                  <span className="text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-full">
+                    {alertSummary.active_overdue_cases_count} Overdue SLA
+                  </span>
+                )}
+              </div>
+              <p className="text-[11px] text-slate-600 mt-0.5">
+                {alertSummary.total_unread} unread alerts • {alertSummary.total_unacknowledged} require formal acknowledgement • {alertSummary.pending_transfers_count} incoming transfers awaiting decision
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to="/aicte/notifications"
+            className="px-3.5 py-1.5 bg-white border border-slate-300 hover:border-blue-400 text-xs font-bold text-slate-800 hover:text-blue-600 rounded-xl transition shadow-sm flex items-center gap-1.5"
+          >
+            Open Alert Center <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
+        </div>
+      )}
 
       {/* Analytics Controls & Filters Bar */}
       <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-sm flex flex-wrap items-center justify-between gap-4">

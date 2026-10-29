@@ -14,6 +14,12 @@ class Notification(Base):
     link: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     notification_type: Mapped[str] = mapped_column(String(50), default="INFO", nullable=False)
     is_read: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
+    requires_acknowledgement: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
+    is_acknowledged: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False, index=True)
+    acknowledged_at: Mapped[Optional[datetime]] = mapped_column(DateTime, nullable=True)
+    severity: Mapped[str] = mapped_column(String(20), default="INFO", nullable=False)  # INFO, WARNING, CRITICAL
+    category: Mapped[Optional[str]] = mapped_column(String(50), nullable=True, index=True)
+    reference_id: Mapped[Optional[str]] = mapped_column(String(100), nullable=True, index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime, default=lambda: datetime.now(timezone.utc), nullable=False, index=True)
 
     user: Mapped["User"] = relationship("User", back_populates="notifications")

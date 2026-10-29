@@ -213,7 +213,11 @@ class AICTETransferService:
             unit_id=destination_unit.id,
             title=f"Incoming Case Transfer: {case.case_reference}",
             message=f"An inter-bureau transfer proposal for case {case.case_reference} has been submitted to {destination_unit.code} by {from_unit.code}.",
-            link=f"/aicte/transfers"
+            link=f"/aicte/transfers/{transfer.id}",
+            category="TRANSFER_PENDING",
+            severity="WARNING",
+            reference_id=f"TRANSFER_PROP_{transfer.id}",
+            requires_acknowledgement=True
         )
 
         db.commit()
@@ -338,7 +342,11 @@ class AICTETransferService:
             unit_id=transfer.from_unit_id,
             title=f"Transfer Accepted: {case.case_reference}",
             message=f"Case {case.case_reference} transfer to {transfer.to_unit.code} was accepted by {current_user.full_name}.",
-            link=f"/aicte/cases/{case.id}"
+            link=f"/aicte/cases/{case.id}",
+            category="TRANSFER_DECISION",
+            severity="INFO",
+            reference_id=f"TRANSFER_ACCEPTED_{transfer.id}",
+            requires_acknowledgement=False
         )
 
         db.commit()
@@ -443,7 +451,11 @@ class AICTETransferService:
             unit_id=transfer.from_unit_id,
             title=f"Transfer Declined: {case.case_reference}",
             message=f"Transfer proposal for {case.case_reference} to {transfer.to_unit.code} was declined. Rejection reason: {payload.rejection_reason.strip()}",
-            link=f"/aicte/cases/{case.id}"
+            link=f"/aicte/cases/{case.id}",
+            category="TRANSFER_DECISION",
+            severity="WARNING",
+            reference_id=f"TRANSFER_REJECTED_{transfer.id}",
+            requires_acknowledgement=False
         )
 
         db.commit()
@@ -540,6 +552,19 @@ class AICTETransferService:
                 "restored_status": restored_status.value
             })
         ))
+
+        # Notify Receiving Unit of cancellation
+        cls._notify_unit_members(
+            db=db,
+            unit_id=transfer.to_unit_id,
+            title=f"Transfer Cancelled: {case.case_reference}",
+            message=f"Transfer proposal for case {case.case_reference} to {transfer.to_unit.code} was withdrawn by {current_user.full_name}.",
+            link=f"/aicte/cases/{case.id}",
+            category="TRANSFER_DECISION",
+            severity="INFO",
+            reference_id=f"TRANSFER_CANCELLED_{transfer.id}",
+            requires_acknowledgement=False
+        )
 
         db.commit()
         db.refresh(transfer)
@@ -662,32 +687,34 @@ class AICTETransferService:
         return cls.map_transfer_to_response(transfer)
 
     @staticmethod
-    def _notify_unit_members(db: Session, unit_id: int, title: str, message: str, link: str):
-        """Enqueue outbox notifications to all active members of an organizational unit."""
+    def _notify_unit_members(
+        db: Session,
+        unit_id: int,
+        title: str,
+        message: str,
+        link: str,
+        category: str = "TRANSFER_PENDING",
+        severity: str = "WARNING",
+        reference_id: Optional[str] = None,
+        requires_acknowledgement: bool = False
+    ):
+        """Enqueue outbox notifications to all active members of an organizational unit using AICTEAlertService."""
+        from app.services.aicte_alert_service import AICTEAlertService
         memberships = db.query(BureauMembership).filter(
             BureauMembership.organizational_unit_id == unit_id,
             BureauMembership.is_active == True
         ).all()
-        now = datetime.now(timezone.utc)
         for m in memberships:
             if m.user and m.user.is_active:
-                notif = Notification(
-                    user_id=m.user_id,
+                AICTEAlertService.send_alert(
+                    db=db,
+                    recipient_id=m.user_id,
+                    category=category,
+                    severity=severity,
                     title=title,
                     message=message,
                     link=link,
-                    notification_type="AICTE_TRANSFER",
-                    created_at=now
+                    reference_id=reference_id,
+                    requires_acknowledgement=requires_acknowledgement,
+                    email_notify=True
                 )
-                db.add(notif)
-                db.flush()
-                db.add(NotificationOutbox(
-                    notification_id=notif.id,
-                    user_id=m.user_id,
-                    channel="EMAIL",
-                    recipient_email=m.user.email,
-                    subject=title,
-                    body=message,
-                    status="PENDING",
-                    created_at=now
-                ))

@@ -59,7 +59,12 @@ class SLABackgroundScheduler:
             result["escalated_refs"] = escalated
             result["escalated_count"] = len(escalated)
 
-            # 3. Process pending notification outbox
+            # 3. Process AICTE SLA, deadline breaches, and operational alerts
+            from app.services.aicte_alert_service import AICTEAlertService
+            aicte_alerts = AICTEAlertService.scan_and_generate_sla_alerts(db)
+            result["aicte_alerts"] = aicte_alerts
+
+            # 4. Process pending notification outbox
             dispatched = dispatch_pending_outbox(db)
             result["outbox_dispatched"] = dispatched
 

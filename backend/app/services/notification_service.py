@@ -19,18 +19,29 @@ def create_notification(
     message: str,
     link: Optional[str] = None,
     notification_type: str = "INFO",
-    email_notify: bool = True
+    email_notify: bool = True,
+    severity: str = "INFO",
+    category: Optional[str] = None,
+    reference_id: Optional[str] = None,
+    requires_acknowledgement: bool = False
 ) -> Notification:
     """
     Create in-app notification with atomic transactional outbox entry.
     Ensures that notifications are reliably stored even if outbound email is delayed or fails.
+    Supports alert categories, severity tiers, reference correlation, and acknowledgement requirements.
     """
     notif = Notification(
         user_id=user_id,
         title=title,
         message=message,
         link=link,
-        notification_type=notification_type
+        notification_type=notification_type,
+        severity=severity,
+        category=category,
+        reference_id=reference_id,
+        requires_acknowledgement=requires_acknowledgement,
+        is_acknowledged=False,
+        acknowledged_at=None
     )
     db.add(notif)
     db.flush()

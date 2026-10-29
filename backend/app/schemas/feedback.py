@@ -34,4 +34,10 @@ class NotificationResponse(BaseModel):
     link: Optional[str] = None
     notification_type: str
     is_read: bool
+    requires_acknowledgement: bool = False
+    is_acknowledged: bool = False
+    acknowledged_at: Optional[datetime] = None
+    severity: str = "INFO"
+    category: Optional[str] = None
+    reference_id: Optional[str] = None
     created_at: datetime

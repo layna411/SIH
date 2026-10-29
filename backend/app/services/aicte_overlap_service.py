@@ -281,6 +281,11 @@ class AICTEOverlapService:
                 "cross_bureau": cross_bureau
             })
         )
+
+        # Dispatch alert notification to authorized Bureau officials
+        from app.services.aicte_alert_service import AICTEAlertService
+        AICTEAlertService.notify_overlap_detected(db, new_overlap)
+
         return new_overlap
 
     @staticmethod
