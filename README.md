@@ -431,7 +431,7 @@ Run the backend test suite using `pytest`:
 .\venv\Scripts\pytest backend\app\tests -v
 ```
 
-**Test Coverage Highlights (138 Passing Tests against XAMPP MySQL `eduresolve_ai_test`)**:
+**Test Coverage Highlights (152 Passing Tests against XAMPP MySQL `eduresolve_ai_test`)**:
 - **Health Endpoints**: `/api/health`, `/api/health/db`, `/api/v1/ai/health`, `/api/v1/ai/readiness`
 - **Email Verification & Account Security (Step 6)**:
   - Cryptographically secure verification token generation and SHA-256 database hashing
@@ -481,15 +481,16 @@ Run the backend test suite using `pytest`:
 - **Security & RBAC**: Argon2id password hashing, JWT expiration, IDOR prevention, and cross-tenant boundary protections
 - **Grievance State Machine**: Formal 11-stage status transitions, mandatory reasons, atomic audit logging, internal confidential notes, and two-way messaging
 - **Attachments & SLAs**: Authenticated document storage and automatic overdue escalation batch services
-- **AICTE Cross-Bureau Suite (Step 7 — Phases B, C, D & E - 44 Comprehensive Tests)**:
+- **AICTE Cross-Bureau Suite (Step 7 — Phases B, C, D, E & F - 58 Comprehensive Tests)**:
   - Phase B (10 tests): Institution identity extension, AICTE Permanent ID verification, institutional aliases, organizational units, and bureau memberships.
   - Phase C (10 tests): AICTE case lifecycle state machine, direct intake, procedural milestone ledger (`case_actions`), campus referral workflow, and consolidated profile.
   - Phase D (10 tests): Overlap detection, candidate bounding, multi-signal scoring, narrative shielding, human review decisions, and non-destructive case linking.
   - Phase E (14 tests): Formal inter-bureau transfer proposals, receiving unit acceptance, mandatory rejection reasons, exact prior status restoration, cancellation, row-level locking, duplicate prevention, direct assignment guard, and outbox notification queuing.
+  - Phase F (14 tests): Consolidated AICTE analytics, database-level distinct aggregations, active-case ageing brackets, SLA breach monitoring, zero-denominator disposal rate protection, Bureau/Regional workload breakdown, and formula-injection-safe CSV streaming exports.
 
 ---
 
-## 🏛️ AICTE Cross-Bureau Case Management (Step 7 — Phases B, C, D & E Completed)
+## 🏛️ AICTE Cross-Bureau Case Management (Step 7 — Phases B, C, D, E & F Completed)
 
 EduResolve AI features an integrated architecture for cross-bureau complaint case tracking across AICTE autonomous Bureaus, Cells, and Regional Offices:
 
@@ -526,8 +527,13 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - Concurrency Safeguards: Row-level locking (`with_for_update()`) and state validation prevent concurrent accept/reject races. Active pending duplicates return `HTTP 409 Conflict`.
   - Direct Assignment Guard: `/cases/{id}/assign` forbids changing `current_unit_id` for non-SuperAdmin users, preventing bypass of the formal transfer workflow.
   - Outbox Notification Integration: Dispatches notification events to affected Bureau members transactionally.
-- **Frontend AICTE Suite (Phases C, D & E)**:
-  - AICTE Integrated Dashboard (`/aicte`) with incoming transfer alerts
+- **Consolidated AICTE Analytics, Ageing & Reporting (Phase F)**:
+  - `AICTEAnalyticsService`: Database-side distinct aggregation for KPIs, status-by-status distributions, active-case ageing brackets (0–7d, 8–15d, 16–30d, 31–60d, >60d), and historical disposal time.
+  - SLA & Deadlines Monitoring: Isolates overdue next actions, overdue disposal targets, total SLA breaches, and unmonitored cases missing deadlines.
+  - Workload & Trend Distributions: Chronological 6-month monthly trends, Bureau/Regional office caseload breakdown, and top institution complaint ranking.
+  - Streaming CSV Reports: Dedicated endpoints (`/reports/cases.csv`, `/reports/summary.csv`) neutralizing formula injection attacks.
+- **Frontend AICTE Suite (Phases C, D, E & F)**:
+  - AICTE Integrated Dashboard (`/aicte`) with Recharts visual charts, period presets, Bureau & Region filters, KPI summary cards, and CSV export buttons
   - AICTE Case Directory (`/aicte/cases`)
   - AICTE Case Docket & Action History (`/aicte/cases/:id`) with transfer action modal, active transfer banner, and transfer history ledger
   - AICTE Inter-Bureau Transfer Queue (`/aicte/transfers`) with incoming/outgoing queues, status filters, and decision modal

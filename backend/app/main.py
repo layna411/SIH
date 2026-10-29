@@ -27,6 +27,7 @@ from app.api.v1.organizational_units import router as organizational_units_route
 from app.api.v1.aicte_cases import router as aicte_cases_router
 from app.api.v1.aicte_overlaps import router as aicte_overlaps_router
 from app.api.v1.aicte_transfers import router as aicte_transfers_router
+from app.api.v1.aicte_analytics import router as aicte_analytics_router
 from app.services.scheduler import sla_scheduler
 import time
 from collections import defaultdict
@@ -219,6 +220,7 @@ app.include_router(organizational_units_router, prefix=v1_prefix)
 app.include_router(aicte_cases_router, prefix=v1_prefix)
 app.include_router(aicte_overlaps_router, prefix=v1_prefix)
 app.include_router(aicte_transfers_router, prefix=v1_prefix)
+app.include_router(aicte_analytics_router, prefix=v1_prefix)
 
 from app.models.enums import UserRoleEnum
 from app.models.user import User

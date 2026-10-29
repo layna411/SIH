@@ -554,48 +554,37 @@ flowchart TD
 
 ---
 
-### Phase E: Integrated Dashboard and Server-Side Analytics
-- **Primary Goal:** Implement the central AICTE dashboard computing real metrics from XAMPP MySQL.
-- **Dependencies:** Phases C & D.
-- **Expected Files:**
-  - Backend: `backend/app/api/v1/aicte_dashboard.py`
-  - Backend: `backend/app/services/aicte_analytics_service.py`
-  - Frontend: `frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx`
-  - Frontend: `frontend/src/components/aicte/BureauWorkloadChart.tsx`
-  - Frontend: `frontend/src/components/aicte/RegionalHeatmap.tsx`
-  - Frontend: `frontend/src/components/aicte/AgeingDistributionCard.tsx`
-- **API Changes:**
-  - `GET /api/v1/aicte/dashboard/metrics` (total, pending, under-process, disposed, transferred, escalated, overdue)
-  - `GET /api/v1/aicte/dashboard/bureau-workload` (caseload distribution by Bureau)
-  - `GET /api/v1/aicte/dashboard/regional-workload` (caseload by AICTE Regional Office)
-  - `GET /api/v1/aicte/dashboard/high-risk-institutions` (institutions with concurrent multi-bureau cases)
-- **Database Changes:**
-  - Optimized composite indexes for analytics performance.
-- **Acceptance Criteria:**
-  - 100% computed from real database records; no mocked counters or static fake figures.
-  - Sub-second dashboard load time on development dataset.
-
----
-
-### Phase F: Search, Transfers, and Action History
-- **Primary Goal:** Multi-criteria search engine, inter-bureau case transfer workflow, and procedural action ledger.
-- **Dependencies:** Phase E.
-- **Expected Files:**
-  - Backend: `backend/app/models/case_transfer.py`, `backend/app/models/case_action.py`
-  - Backend: `backend/app/services/case_transfer_service.py`
-  - Backend: `backend/app/api/v1/aicte_transfers.py`, `backend/app/api/v1/aicte_actions.py`
-  - Frontend: `frontend/src/pages/aicte/CaseTransferModal.tsx`, `frontend/src/pages/aicte/ProceduralActionLog.tsx`
-- **API Changes:**
-  - `GET /api/v1/aicte/cases/search` (multi-facet search: AICTE ID, Case ID, Bureau, Region, Category, Status, Date)
-  - `POST /api/v1/aicte/cases/{id}/transfer` (initiate case transfer to another Bureau/Cell)
-  - `POST /api/v1/aicte/transfers/{id}/accept` (receiving Bureau accepts case)
-  - `POST /api/v1/aicte/cases/{id}/actions` (log procedural step: Show Cause Notice, Hearing, etc.)
-- **Database Changes:**
-  - Create table `case_transfers`.
-  - Create table `case_actions`.
-- **Acceptance Criteria:**
-  - Inter-bureau transfer updates case responsibility with immutable transfer audit log.
-  - Multi-parameter filter returns exact matching dockets in paginated structure.
+### Phase F: Consolidated AICTE Analytics, Case Ageing, SLA Monitoring and Reporting
+- **Primary Goal:** Implement a comprehensive, data-driven analytical and reporting layer across AICTE Bureaus, Cells, and Regional Offices.
+- **Status:** **PHASE F COMPLETED**
+- **Delivered Files:**
+  - Backend Service: `backend/app/services/aicte_analytics_service.py` (`AICTEAnalyticsService`)
+  - Backend Schemas: `backend/app/schemas/aicte_analytics.py` (Pydantic v2 analytical schemas)
+  - Backend API: `backend/app/api/v1/aicte_analytics.py` (mounted at `/api/v1/aicte/analytics`)
+  - Frontend Workspace: `frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx`
+  - Frontend Types: `frontend/src/types/index.ts`
+  - Tests: `backend/app/tests/test_step7_phase_f_analytics.py` (14 tests, 100% passing)
+- **Implemented API Endpoints:**
+  - `GET /api/v1/aicte/analytics/overview` (summary KPIs, active backlog, status distribution)
+  - `GET /api/v1/aicte/analytics/ageing` (active-case ageing bands: 0–7d, 8–15d, 16–30d, 31–60d, >60d)
+  - `GET /api/v1/aicte/analytics/sla` (overdue actions, overdue expected disposal dates, missing deadline tracking)
+  - `GET /api/v1/aicte/analytics/institutions` (institution-wise workload ranking and active/overdue metrics)
+  - `GET /api/v1/aicte/analytics/organizational-units` (Bureau/Cell/Regional Office caseload breakdown)
+  - `GET /api/v1/aicte/analytics/trends` (6-month chronological intake, disposal, and transfer trends)
+  - `GET /api/v1/aicte/analytics/transfers` (inter-Bureau transfer volume, acceptance rates, turnaround hours)
+  - `GET /api/v1/aicte/analytics/cross-bureau` (overlap alerts and confirmed case link metrics)
+  - `GET /api/v1/aicte/analytics/reports/cases.csv` (authorized case report export with formula injection sanitization)
+  - `GET /api/v1/aicte/analytics/reports/summary.csv` (authorized aggregate KPI summary export)
+- **Analytical & Performance Invariants:**
+  1. *Server-Side Aggregation*: Database-level `COUNT(DISTINCT ...)`, `GROUP BY`, and `DATEDIFF` avoid join multiplication and excessive memory usage.
+  2. *Role-Scoped RBAC*: `SUPER_ADMIN` has nationwide visibility; `REGULATORY_ADMIN` is scoped by jurisdiction states/institutions; Bureau officers are strictly scoped to their authorized units.
+  3. *Accurate Ageing Calculation*: Active backlog ageing is calculated only for non-disposed cases; historical disposal times are tracked separately.
+  4. *Zero Denominator Protection*: Disposal rate calculations return safe `None` when no cases were received in the period, preventing division-by-zero crashes.
+  5. *Formula Injection Defense*: CSV exports neutralize `=, +, -, @, \t, \r` characters via single-quote prepending.
+- **Acceptance Verification:**
+  - 14 dedicated Phase F tests passing cleanly against `eduresolve_ai_test` in XAMPP MySQL.
+  - Full backend regression suite: **152 tests passing (100%), 0 failures**.
+  - Frontend production build (`npm run build`): Exit code 0, 0 TypeScript errors.
 
 ---
 

@@ -695,5 +695,47 @@ Detailed entity models, relationship diagrams, and the phased implementation roa
    - Complete backend regression suite: **138 tests passed, 0 failed in 32.37s**.
    - Frontend production build: `npm run build` completed with **0 errors**.
 
+---
+
+## 14. Phase F Implementation Status (Completed)
+
+**Implementation Date:** October 2026  
+**Status:** **PHASE F COMPLETED**  
+**Schema Migration:** No DDL migration required (existing indexes and schema on `aicte_cases`, `case_actions`, `aicte_case_transfers`, and `institutions` proved optimal). Current head: `f0a45b6c7d8e`.
+
+### Delivered Features in Phase F
+1. **Consolidated AICTE Analytics Service (`AICTEAnalyticsService`):**
+   - File: [`backend/app/services/aicte_analytics_service.py`](file:///e:/Layn/SIH/backend/app/services/aicte_analytics_service.py)
+   - Performs strictly server-side, database-level aggregations (`COUNT(DISTINCT ...)`, `GROUP BY`, `DATEDIFF`) avoiding in-memory iteration or join multiplication.
+   - Enforces strict role and Bureau boundary scoping (`SUPER_ADMIN` nationwide; `REGULATORY_ADMIN` scoped to assigned jurisdiction states/institutions; Bureau officers scoped to authorized organizational units; campus students and college officers denied access with `HTTP 403 Forbidden`).
+2. **Standardized Analytical Metric Semantics:**
+   - **Workload Snapshot**: Total received, active backlog (`status IN ACTIVE_STATUSES`), disposed orders, status-by-status breakdown across all 10 procedural lifecycle states, awaiting action, reopened dockets, and pending transfers/overlaps.
+   - **Active Case Ageing**: Calculated strictly for active non-disposed cases as elapsed calendar days from `received_at` to reporting time in UTC. Standard bands: 0–7d, 8–15d, 16–30d, 31–60d, >60d. Historical average disposal time computed separately for disposed dockets.
+   - **SLA & Timeliness Metrics**: Distinctly isolates overdue next actions, overdue expected disposals, total SLA breaches, escalated cases, and cases missing target deadlines (preventing unmonitored cases from being silently marked compliant).
+   - **Period Disposal Rate**: Derived as `(disposed in period / received in period) * 100`, returning explicit `None` when denominator is 0 to prevent division-by-zero crashes.
+3. **REST API Analytics Suite:**
+   - Endpoints mounted under `/api/v1/aicte/analytics`:
+     - `GET /overview`: Summary KPIs, active backlog, and status distribution.
+     - `GET /ageing`: Active-case ageing brackets and average backlog age.
+     - `GET /sla`: Overdue actions, overdue disposal targets, and SLA compliance rates.
+     - `GET /institutions`: Top institutions by case volume with active/overdue breakdown.
+     - `GET /organizational-units`: Bureau and Regional Office workload comparisons.
+     - `GET /trends`: 6-month chronological area trend of received vs disposed dockets.
+     - `GET /transfers`: Inter-Bureau transfer volume, acceptance rates, and average turnaround time.
+     - `GET /cross-bureau`: Overlap detection alerts and confirmed case link metrics.
+     - `GET /reports/cases.csv`: Authorized, streaming case records with formula injection neutralization (`sanitize_csv_value`).
+     - `GET /reports/summary.csv`: Authorized aggregate KPI summary export.
+4. **Enhanced Frontend Analytics Dashboard:**
+   - File: [`frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx`](file:///e:/Layn/SIH/frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx)
+   - Integrated Recharts visual data visualizations: Case Ageing Bar Chart, 6-Month Intake vs Disposal Area Chart, and Status Distribution.
+   - Presets for All Time, Last 30 Days, Last 90 Days, Last 6 Months; Bureau Unit and Region filters.
+   - Interactive data tables with click-through deep links to case directories and unified institution profiles.
+   - 1-click Cases CSV and Summary CSV export buttons.
+5. **Automated Verification:**
+   - Dedicated Phase F test suite: [`backend/app/tests/test_step7_phase_f_analytics.py`](file:///e:/Layn/SIH/backend/app/tests/test_step7_phase_f_analytics.py) (14 tests covering all 20 specified criteria, 100% passing against XAMPP MySQL `eduresolve_ai_test`).
+   - Full regression suite: **152 passed, 0 failed in 31.80s**.
+   - Frontend production build: `npm run build` completed with **0 errors**.
+
+
 
 

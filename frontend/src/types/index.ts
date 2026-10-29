@@ -710,4 +710,129 @@ export interface TransferCancelPayload {
   cancellation_reason: string;
 }
 
+// ---------------------------------------------------------------------------
+// AICTE Analytics & Reporting Types (Step 7, Phase F)
+// ---------------------------------------------------------------------------
+
+export interface AICTEStatusCount {
+  status: string;
+  label: string;
+  count: number;
+}
+
+export interface AICTEAgeingBucket {
+  bucket_key: string;
+  label: string;
+  min_days: number;
+  max_days?: number;
+  count: number;
+  percentage: number;
+}
+
+export interface AICTEAgeingResponse {
+  total_active_cases: number;
+  average_active_age_days?: number;
+  median_active_age_days?: number;
+  buckets: AICTEAgeingBucket[];
+  average_disposal_time_days?: number;
+}
+
+export interface AICTESLAResponse {
+  active_cases_count: number;
+  overdue_next_action_count: number;
+  overdue_expected_disposal_count: number;
+  total_sla_breached_count: number;
+  escalated_cases_count: number;
+  missing_next_action_deadline_count: number;
+  missing_expected_disposal_count: number;
+  sla_compliance_rate?: number;
+}
+
+export interface AICTEInstitutionSummary {
+  institution_id: number;
+  name: string;
+  code: string;
+  aicte_permanent_id?: string;
+  state?: string;
+  region?: string;
+  total_cases: number;
+  active_cases: number;
+  overdue_cases: number;
+  disposed_cases: number;
+  disposal_rate?: number;
+}
+
+export interface AICTEInstitutionsAnalyticsResponse {
+  total_institutions: number;
+  institutions: AICTEInstitutionSummary[];
+}
+
+export interface AICTEOrganizationalUnitSummary {
+  unit_id: number;
+  code: string;
+  name: string;
+  unit_type: string;
+  region_code?: string;
+  total_cases: number;
+  active_cases: number;
+  overdue_cases: number;
+  disposed_cases: number;
+  pending_incoming_transfers: number;
+  disposal_rate?: number;
+}
+
+export interface AICTEOrganizationalUnitsAnalyticsResponse {
+  total_units: number;
+  units: AICTEOrganizationalUnitSummary[];
+}
+
+export interface AICTETrendPoint {
+  period: string;
+  received_count: number;
+  disposed_count: number;
+  transferred_count: number;
+}
+
+export interface AICTETrendsResponse {
+  granularity: string;
+  trend_points: AICTETrendPoint[];
+}
+
+export interface AICTETransferAnalyticsResponse {
+  total_transfers_initiated: number;
+  pending_acceptance_count: number;
+  accepted_count: number;
+  rejected_count: number;
+  cancelled_count: number;
+  average_turnaround_hours?: number;
+}
+
+export interface AICTECrossBureauAnalyticsResponse {
+  total_overlaps_detected: number;
+  pending_review_overlaps: number;
+  confirmed_duplicates: number;
+  confirmed_related: number;
+  rejected_overlaps: number;
+  total_case_links: number;
+}
+
+export interface AICTEOverviewAnalyticsResponse {
+  reporting_period_start?: string;
+  reporting_period_end?: string;
+  total_received: number;
+  total_active: number;
+  total_disposed: number;
+  status_distribution: AICTEStatusCount[];
+  overdue_actions_count: number;
+  overdue_disposal_count: number;
+  total_sla_breached_count: number;
+  escalated_count: number;
+  awaiting_action_count: number;
+  reopened_count: number;
+  pending_transfers_count: number;
+  pending_overlaps_count: number;
+  disposal_rate?: number;
+  average_age_active_days?: number;
+}
+
 
