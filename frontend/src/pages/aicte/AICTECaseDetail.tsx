@@ -172,6 +172,14 @@ export const AICTECaseDetail: React.FC = () => {
             Refresh
           </button>
           <button
+            onClick={() => setIsTransferModalOpen(true)}
+            disabled={caseData.status === 'CLOSED' || caseData.status === 'DISPOSED' || caseData.status === 'TRANSFER_PENDING'}
+            className="flex items-center gap-1.5 px-3.5 py-2 border border-purple-200 text-purple-700 bg-purple-50 text-xs font-semibold rounded-xl hover:bg-purple-100 disabled:opacity-50 transition shadow-sm"
+          >
+            <ArrowRightLeft className="w-4 h-4" />
+            Initiate Transfer
+          </button>
+          <button
             onClick={() => setIsActionModalOpen(true)}
             className="flex items-center gap-2 px-4 py-2 bg-blue-600 text-white text-xs font-semibold rounded-xl hover:bg-blue-700 transition shadow-sm"
           >
@@ -180,6 +188,27 @@ export const AICTECaseDetail: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* Transfer Pending Warning Banner */}
+      {caseData.status === 'TRANSFER_PENDING' && (
+        <div className="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex items-start justify-between gap-3 text-xs text-amber-900">
+          <div className="flex items-start gap-2.5">
+            <ShieldAlert className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <p className="font-bold text-slate-900">Inter-Bureau Transfer Proposal Pending Acceptance</p>
+              <p className="text-[11px] text-amber-800 mt-0.5 leading-relaxed">
+                This case has an active handover proposal awaiting receiving bureau review. Operational responsibility remains with the current unit (<span className="font-bold">{caseData.current_unit_code}</span>) until formally accepted.
+              </p>
+            </div>
+          </div>
+          <Link
+            to="/aicte/transfers"
+            className="px-3 py-1.5 bg-white border border-amber-200 text-amber-900 font-semibold rounded-xl hover:bg-amber-100/70 transition shrink-0"
+          >
+            Open Transfer Queue →
+          </Link>
+        </div>
+      )}
 
       {/* Main Grid: Details Left, Timeline Right */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
@@ -261,6 +290,84 @@ export const AICTECaseDetail: React.FC = () => {
             caseId={caseData.id}
             caseReference={caseData.case_reference}
           />
+
+          {/* Inter-Bureau Transfer History Ledger */}
+          {transfers.length > 0 && (
+            <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-sm space-y-3">
+              <div className="flex items-center justify-between pb-2 border-b border-slate-100">
+                <h3 className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <ArrowRightLeft className="w-4 h-4 text-purple-600" />
+                  Inter-Bureau Transfer Ledger
+                </h3>
+                <span className="text-xs text-slate-400 font-mono">
+                  {transfers.length} Handover{transfers.length === 1 ? '' : 's'}
+                </span>
+              </div>
+
+              <div className="space-y-2.5 text-xs">
+                {transfers.map((t) => (
+                  <div key={t.id} className="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-xs font-bold text-slate-800">
+                        {t.from_unit_code} ➔ {t.to_unit_code}
+                      </span>
+                      <span className={`px-2 py-0.5 rounded-full text-[10px] font-semibold border ${
+                        t.transfer_status === 'ACCEPTED' ? 'bg-emerald-50 text-emerald-700 border-emerald-200' :
+                        t.transfer_status === 'REJECTED' ? 'bg-rose-50 text-rose-700 border-rose-200' :
+                        t.transfer_status === 'CANCELLED' ? 'bg-slate-100 text-slate-600 border-slate-200' :
+                        'bg-amber-50 text-amber-700 border-amber-200'
+                      }`}>
+                        {t.transfer_status.replace(/_/g, ' ')}
+                      </span>
+                    </div>
+
+                    <p className="text-slate-800 text-[11px]"><span className="font-semibold text-slate-600">Reason:</span> {t.transfer_reason}</p>
+                    {t.handover_summary && (
+                      <p className="text-slate-600 text-[11px]"><span className="font-semibold text-slate-600">Handover Summary:</span> {t.handover_summary}</p>
+                    )}
+                    {t.response_notes && (
+                      <p className="text-slate-600 italic text-[11px]"><span className="font-semibold not-italic text-slate-600">Response:</span> "{t.response_notes}"</p>
+                    )}
+
+                    <div className="text-[10px] text-slate-400 flex items-center justify-between pt-1 border-t border-slate-200/60">
+                      <span>Initiated: {new Date(t.initiated_at).toLocaleDateString()} by {t.initiated_by_name}</span>
+                      {t.transfer_status === 'PENDING_ACCEPTANCE' && (
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => {
+                              setSelectedTransferForDecision(t);
+                              setTransferDecisionAction('ACCEPT');
+                            }}
+                            className="text-emerald-700 font-bold hover:underline"
+                          >
+                            Accept
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedTransferForDecision(t);
+                              setTransferDecisionAction('REJECT');
+                            }}
+                            className="text-rose-700 font-bold hover:underline"
+                          >
+                            Decline
+                          </button>
+                          <button
+                            onClick={() => {
+                              setSelectedTransferForDecision(t);
+                              setTransferDecisionAction('CANCEL');
+                            }}
+                            className="text-slate-500 font-medium hover:underline"
+                          >
+                            Withdraw
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Procedural Action Timeline */}
           <div className="p-5 bg-white border border-slate-200/80 rounded-2xl shadow-sm">
@@ -380,6 +487,33 @@ export const AICTECaseDetail: React.FC = () => {
           onSubmit={handleRecordAction}
           currentStatus={caseData.status}
           caseReference={caseData.case_reference}
+        />
+      )}
+
+      {/* Initiate Transfer Modal */}
+      {isTransferModalOpen && (
+        <InitiateTransferModal
+          isOpen={isTransferModalOpen}
+          onClose={() => setIsTransferModalOpen(false)}
+          onSuccess={loadCaseDetail}
+          caseId={caseData.id}
+          caseReference={caseData.case_reference}
+          currentUnitId={caseData.current_unit_id}
+          currentUnitCode={caseData.current_unit_code}
+        />
+      )}
+
+      {/* Transfer Decision Modal */}
+      {selectedTransferForDecision && transferDecisionAction && (
+        <TransferDecisionModal
+          isOpen={!!selectedTransferForDecision}
+          onClose={() => {
+            setSelectedTransferForDecision(null);
+            setTransferDecisionAction(null);
+          }}
+          onSuccess={loadCaseDetail}
+          transfer={selectedTransferForDecision}
+          actionType={transferDecisionAction}
         />
       )}
     </div>

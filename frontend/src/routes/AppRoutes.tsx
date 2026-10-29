@@ -44,6 +44,7 @@ import { AICTECaseDetail } from '../pages/aicte/AICTECaseDetail';
 import { AICTEInstitutionProfile } from '../pages/aicte/AICTEInstitutionProfile';
 import { AICTEOverlapQueue } from '../pages/aicte/AICTEOverlapQueue';
 import { AICTEOverlapDetail } from '../pages/aicte/AICTEOverlapDetail';
+import { AICTETransferQueue } from '../pages/aicte/AICTETransferQueue';
 
 export const AppRoutes: React.FC = () => {
   return (
@@ -124,6 +125,7 @@ export const AppRoutes: React.FC = () => {
           <Route path="/aicte/institutions/:id" element={<AICTEInstitutionProfile />} />
           <Route path="/aicte/overlaps" element={<AICTEOverlapQueue />} />
           <Route path="/aicte/overlaps/:id" element={<AICTEOverlapDetail />} />
+          <Route path="/aicte/transfers" element={<AICTETransferQueue />} />
         </Route>
       </Route>
 
