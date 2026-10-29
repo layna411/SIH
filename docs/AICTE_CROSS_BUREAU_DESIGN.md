@@ -588,19 +588,34 @@ flowchart TD
 
 ---
 
-### Phase G: Notifications, SLA Coordination, and Escalation Improvements
-- **Primary Goal:** Event-driven cross-bureau notifications and automated SLA escalation background loop.
-- **Dependencies:** Phase F.
-- **Expected Files:**
-  - Backend: `backend/app/services/aicte_notification_events.py`
-  - Backend: `backend/app/services/scheduler.py` (extend SLA background task)
-- **API Changes:**
-  - `GET /api/v1/aicte/notifications` (bureau-filtered notification feed)
-- **Database Changes:**
-  - Outbox schema reuse.
-- **Acceptance Criteria:**
-  - Cross-bureau overlap triggers instant in-app alerts to officers in both involved bureaus.
-  - Cases exceeding Citizen Charter disposal deadlines auto-escalate to Bureau Head with notification.
+### Phase G: Centralized AICTE Alert Center, Notifications and Escalation Management (COMPLETED)
+- **Primary Goal:** Role-aware centralized alert and notification hub for AICTE case operations, integrating SLA scheduling, transfer alerts, overlap alerts, and administrative error monitoring without altering official case procedural status.
+- **Dependencies:** Phases B through F.
+- **Delivered Files:**
+  - Database Migration: `backend/alembic/versions/g1b23c4d5e6f_step7_phase_g_notification_lifecycle.py`
+  - Backend Service: `backend/app/services/aicte_alert_service.py`
+  - Backend API: `backend/app/api/v1/aicte_notifications.py`
+  - Backend Schemas: `backend/app/schemas/aicte_alert.py`
+  - Scheduler Extension: `backend/app/services/scheduler.py` (integrated `AICTEAlertService.scan_and_generate_sla_alerts`)
+  - Frontend Page: `frontend/src/pages/aicte/AICTENotificationCenter.tsx`
+  - Frontend Component: `frontend/src/components/aicte/AICTENotificationBell.tsx`
+  - Frontend Dashboard Integration: `frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx`
+  - Automated Tests: `backend/app/tests/test_step7_phase_g_alerts.py`
+- **Delivered API Endpoints:**
+  - `GET /api/v1/aicte/notifications` (paginated, filtered by category, severity, read state, ack state)
+  - `GET /api/v1/aicte/notifications/unread-count` (real-time badge count)
+  - `GET /api/v1/aicte/notifications/{id}` (authorized detail)
+  - `POST /api/v1/aicte/notifications/{id}/read` (mark as read without altering case state)
+  - `POST /api/v1/aicte/notifications/{id}/acknowledge` (formal review confirmation with timestamp)
+  - `POST /api/v1/aicte/notifications/read-all` (mark caller's eligible notifications read)
+  - `GET /api/v1/aicte/alerts/summary` (live counters by category, severity, and active queues)
+  - `GET /api/v1/aicte/alerts/overdue` (active overdue cases categorized by Next Action, Disposal, or Both)
+  - `GET /api/v1/aicte/alerts/configuration` (read permitted alert thresholds)
+  - `PATCH /api/v1/aicte/alerts/configuration` (audited administrative threshold updates)
+- **Acceptance Verification:**
+  - 10 dedicated Phase G tests passing cleanly against `eduresolve_ai_test` in XAMPP MySQL.
+  - Complete backend regression suite: **162 tests passing (100%), 0 failures in 32.71s**.
+  - Frontend production build (`npm run build`): Exit code 0, 0 TypeScript errors.
 
 ---
 

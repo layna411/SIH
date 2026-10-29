@@ -532,8 +532,16 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - SLA & Deadlines Monitoring: Isolates overdue next actions, overdue disposal targets, total SLA breaches, and unmonitored cases missing deadlines.
   - Workload & Trend Distributions: Chronological 6-month monthly trends, Bureau/Regional office caseload breakdown, and top institution complaint ranking.
   - Streaming CSV Reports: Dedicated endpoints (`/reports/cases.csv`, `/reports/summary.csv`) neutralizing formula injection attacks.
-- **Frontend AICTE Suite (Phases C, D, E & F)**:
-  - AICTE Integrated Dashboard (`/aicte`) with Recharts visual charts, period presets, Bureau & Region filters, KPI summary cards, and CSV export buttons
+- **Centralized AICTE Alert Center, Notifications & Escalation Management (Phase G)**:
+  - `AICTEAlertService`: Role-aware notification lifecycle management disaggregating alert conditions, notifications, acknowledgements, and case actions. Reading or acknowledging alerts strictly preserves case procedural status.
+  - Periodic SLA Evaluation: Integrated into `SLABackgroundScheduler.run_cycle_sync` to evaluate overdue next actions, overdue expected disposal dates, approaching deadlines, missing deadline compliance, delayed transfers (>72h), and failed email deliveries.
+  - Deduplication Engine: Protects recipients against alert floods by enforcing configurable deduplication cooldown windows (default 24h).
+  - Cross-Bureau Narrative Shielding: Masks confidential complainant particulars and investigation notes in notifications across bureau boundaries.
+  - Centralized Notification & Alert Center APIs (`/api/v1/aicte/notifications`, `/unread-count`, `/read`, `/acknowledge`, `/read-all`, `/api/v1/aicte/alerts/summary`, `/overdue`, `/configuration`).
+- **Frontend AICTE Suite (Phases C, D, E, F & G)**:
+  - AICTE Integrated Dashboard (`/aicte`) with Recharts visual charts, period presets, Bureau & Region filters, KPI summary cards, live operational alert ribbon, and CSV export buttons
+  - AICTE Centralized Alert Center (`/aicte/notifications`) with tabs for All Alerts, Unread, Requires Ack, Live Overdue Cases Queue, and Alert Threshold Configuration
+  - AICTE Notification Bell (`AICTENotificationBell.tsx`) with real-time badges, critical pulse, preview dropdown, and dismiss actions
   - AICTE Case Directory (`/aicte/cases`)
   - AICTE Case Docket & Action History (`/aicte/cases/:id`) with transfer action modal, active transfer banner, and transfer history ledger
   - AICTE Inter-Bureau Transfer Queue (`/aicte/transfers`) with incoming/outgoing queues, status filters, and decision modal
@@ -546,6 +554,7 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - Phase C: `d8c23e4f5a6b` (Parent: `c7b12d3e4f5a`)
   - Phase D: `e9f34a5b6c7d` (Parent: `d8c23e4f5a6b`)
   - Phase E: `f0a45b6c7d8e` (Parent: `e9f34a5b6c7d`)
+  - Phase G: `g1b23c4d5e6f` (Parent: `f0a45b6c7d8e`)
 
 
 ---
