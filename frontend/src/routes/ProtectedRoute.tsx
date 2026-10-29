@@ -4,8 +4,11 @@ import { useAuth } from '../contexts/AuthContext';
 import { UserRole } from '../types';
 import { LoadingSpinner } from '../components/common/LoadingSpinner';
 
-export const ProtectedRoute: React.FC<{ allowedRoles?: UserRole[] }> = ({ allowedRoles }) => {
-  const { user, isAuthenticated, isLoading, hasRole } = useAuth();
+export const ProtectedRoute: React.FC<{ 
+  allowedRoles?: UserRole[]; 
+  allowBureauMembers?: boolean;
+}> = ({ allowedRoles, allowBureauMembers = false }) => {
+  const { user, isAuthenticated, isLoading, hasRole, isBureauMember } = useAuth();
 
   if (isLoading) {
     return (
@@ -19,8 +22,11 @@ export const ProtectedRoute: React.FC<{ allowedRoles?: UserRole[] }> = ({ allowe
     return <Navigate to="/login" replace />;
   }
 
-  if (allowedRoles && !hasRole(allowedRoles)) {
-    // User does not possess the required role for this portal
+  const rolePermitted = allowedRoles ? hasRole(allowedRoles) : true;
+  const bureauPermitted = allowBureauMembers && isBureauMember;
+
+  if (!rolePermitted && !bureauPermitted) {
+    // User does not possess the required role or bureau membership for this portal
     if (user.default_role === 'STUDENT') return <Navigate to="/student" replace />;
     if (user.default_role === 'COLLEGE_OFFICER') return <Navigate to="/officer" replace />;
     if (user.default_role === 'INSTITUTION_HEAD') return <Navigate to="/head" replace />;

@@ -32,12 +32,44 @@ const DEMO_ACCOUNTS: DemoAccount[] = [
     description: 'AICTE Headquarters & National System Admin',
   },
   {
+    role: 'BUREAU_HEAD_RB',
+    label: 'Bureau Head (RB)',
+    email: 'bureau.rb@aicte.gov.in',
+    password: 'Password@123',
+    badgeClass: 'bg-rose-50 text-rose-700 border-rose-200',
+    description: 'Regulation Bureau (RB) — Case assignment & oversight',
+  },
+  {
+    role: 'BUREAU_OFFICER_PGRC',
+    label: 'Bureau Officer (PGRC)',
+    email: 'bureau.pgrc@aicte.gov.in',
+    password: 'Password@123',
+    badgeClass: 'bg-cyan-50 text-cyan-700 border-cyan-200',
+    description: 'Public Grievance Redressal Cell — Transfers & resolution',
+  },
+  {
+    role: 'BUREAU_OFFICER_AB',
+    label: 'Bureau Officer (AB)',
+    email: 'bureau.ab@aicte.gov.in',
+    password: 'Password@123',
+    badgeClass: 'bg-teal-50 text-teal-700 border-teal-200',
+    description: 'Approval Bureau — Approval scrutiny & overlap review',
+  },
+  {
     role: 'REGULATORY_ADMIN',
     label: 'Regulatory Admin',
     email: 'regulator@education.gov.in',
     password: 'Password@123',
     badgeClass: 'bg-blue-50 text-blue-700 border-blue-200',
     description: 'Regional Office & Bureau Jurisdictional Officer',
+  },
+  {
+    role: 'REGIONAL_OFFICER_NORTH',
+    label: 'Regional Officer (North)',
+    email: 'ro.north@aicte.gov.in',
+    password: 'Password@123',
+    badgeClass: 'bg-violet-50 text-violet-700 border-violet-200',
+    description: 'AICTE Regional Office (North) Operations',
   },
   {
     role: 'INSTITUTION_HEAD',
@@ -80,6 +112,12 @@ export const LoginPage: React.FC = () => {
 
     try {
       const loggedUser = await login(email, password);
+      // If user has an active bureau membership and is not a student, direct to AICTE portal
+      if (loggedUser.bureau_memberships && loggedUser.bureau_memberships.some((bm) => bm.is_active)) {
+        navigate('/aicte');
+        return;
+      }
+
       // Navigate to appropriate dashboard based on user role
       switch (loggedUser.default_role) {
         case 'SUPER_ADMIN':

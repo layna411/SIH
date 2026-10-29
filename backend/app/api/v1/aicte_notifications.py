@@ -168,7 +168,7 @@ def get_alert_configuration(
 def update_alert_configuration(
     payload: AICTEAlertConfigurationUpdateRequest,
     db: Session = Depends(get_db),
-    current_user: User = Depends(require_roles([UserRoleEnum.SUPER_ADMIN, UserRoleEnum.REGULATORY_ADMIN]))
+    current_user: User = Depends(require_roles(UserRoleEnum.SUPER_ADMIN, UserRoleEnum.REGULATORY_ADMIN))
 ):
     """
     Update permitted alert thresholds:

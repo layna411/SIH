@@ -63,20 +63,27 @@ def get_current_active_user(current_user: User = Depends(get_current_user)) -> U
         )
     return current_user
 
-def require_roles(*allowed_roles: UserRoleEnum):
+def require_roles(*allowed_roles):
     """Reusable role-requirement dependency factory."""
+    flat_roles = []
+    for r in allowed_roles:
+        if isinstance(r, (list, tuple, set)):
+            flat_roles.extend(r)
+        else:
+            flat_roles.append(r)
+
     def role_checker(current_user: User = Depends(get_current_active_user)) -> User:
         if current_user.default_role == UserRoleEnum.SUPER_ADMIN:
             return current_user
             
         # Check default role
-        if current_user.default_role in allowed_roles:
+        if current_user.default_role in flat_roles:
             return current_user
             
         # Check institution memberships roles
         membership_roles = [m.role for m in current_user.memberships if m.is_active]
         for role in membership_roles:
-            if role in allowed_roles:
+            if role in flat_roles:
                 return current_user
                 
         raise HTTPException(

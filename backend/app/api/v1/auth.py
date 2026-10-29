@@ -23,6 +23,7 @@ from app.schemas.auth import (
     InstitutionMembershipSummary,
     JurisdictionSummary
 )
+from app.schemas.organizational_unit import BureauMembershipResponse
 from app.schemas.role import RoleResponse
 from app.schemas.invitation import AcceptInvitationRequest, InvitationValidateResponse
 from app.models.invitation import UserInvitation
@@ -72,6 +73,25 @@ def build_user_response(user: User, db: Session) -> UserResponse:
                 is_active=j.is_active
             ))
 
+    bureau_memberships = []
+    for bm in user.bureau_memberships:
+        if bm.is_active and bm.organizational_unit:
+            bureau_memberships.append(BureauMembershipResponse(
+                id=bm.id,
+                user_id=bm.user_id,
+                user_name=user.full_name,
+                user_email=user.email,
+                organizational_unit_id=bm.organizational_unit_id,
+                unit_code=bm.organizational_unit.code,
+                unit_name=bm.organizational_unit.name,
+                membership_role=bm.membership_role,
+                designation=bm.designation,
+                is_active=bm.is_active,
+                assigned_by_user_id=bm.assigned_by_user_id,
+                created_at=bm.created_at,
+                updated_at=bm.updated_at
+            ))
+
     return UserResponse(
         id=user.id,
         email=user.email,
@@ -85,7 +105,8 @@ def build_user_response(user: User, db: Session) -> UserResponse:
         created_at=user.created_at,
         updated_at=user.updated_at,
         memberships=memberships,
-        regulatory_jurisdictions=jurisdictions
+        regulatory_jurisdictions=jurisdictions,
+        bureau_memberships=bureau_memberships
     )
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)

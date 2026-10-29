@@ -40,8 +40,10 @@ import {
   Copy,
   Check,
   RotateCcw,
-  AlertCircle
+  AlertCircle,
+  ShieldAlert
 } from 'lucide-react';
+import { ReferGrievanceModal } from '../aicte/ReferGrievanceModal';
 
 const COLORS = ['#2563EB', '#6366F1', '#8B5CF6', '#EC4899', '#F59E0B', '#10B981', '#06B6D4'];
 
@@ -73,6 +75,9 @@ export const HeadDashboard: React.FC = () => {
   const [successModalOpen, setSuccessModalOpen] = useState(false);
   const [createdInvite, setCreatedInvite] = useState<UserInviteResponse | null>(null);
   const [copiedLink, setCopiedLink] = useState(false);
+
+  // Refer to AICTE modal state
+  const [referModalGrievance, setReferModalGrievance] = useState<Grievance | null>(null);
 
   // Synchronize route with activeTab
   useEffect(() => {
@@ -442,12 +447,13 @@ export const HeadDashboard: React.FC = () => {
                   <th className="py-3 px-4">Status</th>
                   <th className="py-3 px-4">Officer Assigned</th>
                   <th className="py-3 px-4">Filing Date</th>
+                  <th className="py-3 px-4 text-right">Regulatory Referral</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 text-slate-700">
                 {escalatedCases.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="py-8 text-center text-slate-400">
+                    <td colSpan={7} className="py-8 text-center text-slate-400">
                       No escalated grievances currently pending for your institution.
                     </td>
                   </tr>
@@ -460,6 +466,15 @@ export const HeadDashboard: React.FC = () => {
                       <td className="py-3 px-4"><StatusBadge status={g.status} /></td>
                       <td className="py-3 px-4 text-slate-600">{g.assigned_officer_name || 'Unassigned'}</td>
                       <td className="py-3 px-4 text-slate-500">{new Date(g.created_at).toLocaleDateString()}</td>
+                      <td className="py-3 px-4 text-right">
+                        <button
+                          onClick={() => setReferModalGrievance(g)}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 text-purple-700 font-semibold text-[11px] transition border border-purple-200 shadow-sm"
+                        >
+                          <ShieldAlert className="w-3 h-3" />
+                          Refer to AICTE
+                        </button>
+                      </td>
                     </tr>
                   ))
                 )}
@@ -798,6 +813,21 @@ export const HeadDashboard: React.FC = () => {
           </div>
         </div>
       </Modal>
+
+      {/* Refer to AICTE Modal */}
+      {referModalGrievance && (
+        <ReferGrievanceModal
+          isOpen={!!referModalGrievance}
+          onClose={() => setReferModalGrievance(null)}
+          onSuccess={() => {
+            setReferModalGrievance(null);
+            fetchDashboardData();
+          }}
+          grievanceId={referModalGrievance.id}
+          grievanceRef={referModalGrievance.reference_number}
+          institutionId={referModalGrievance.institution_id}
+        />
+      )}
     </div>
   );
 };

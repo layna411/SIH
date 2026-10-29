@@ -20,7 +20,7 @@ import {
 } from 'lucide-react';
 
 export const Sidebar: React.FC = () => {
-  const { user, logout } = useAuth();
+  const { user, logout, isBureauMember } = useAuth();
   const navigate = useNavigate();
 
   if (!user) return null;
@@ -52,6 +52,16 @@ export const Sidebar: React.FC = () => {
           <div className="mt-3 pt-2 border-t border-slate-200/60 text-[11px] text-slate-500 truncate flex items-center gap-1.5">
             <Building2 className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <span className="truncate">{user.memberships[0].institution_name}</span>
+          </div>
+        )}
+
+        {user.bureau_memberships && user.bureau_memberships.some((bm) => bm.is_active) && (
+          <div className="mt-2 pt-2 border-t border-slate-200/60 text-[11px] text-purple-700 font-semibold truncate flex items-center gap-1.5">
+            <ShieldCheck className="w-3.5 h-3.5 text-purple-600 shrink-0" />
+            <span className="truncate">
+              {user.bureau_memberships.find((bm) => bm.is_active)?.unit_code || 'AICTE Bureau'} (
+              {user.bureau_memberships.find((bm) => bm.is_active)?.membership_role.replace('_', ' ')})
+            </span>
           </div>
         )}
       </div>
@@ -136,6 +146,85 @@ export const Sidebar: React.FC = () => {
               Workload & Reports
             </NavLink>
           </>
+        )}
+
+        {/* AICTE Bureau Links for Bureau Officers */}
+        {isBureauMember && role !== 'SUPER_ADMIN' && role !== 'REGULATORY_ADMIN' && (
+          <div className="pt-3 mt-3 border-t border-slate-100 space-y-1">
+            <p className="px-3.5 pb-1 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+              AICTE Bureau Operations
+            </p>
+            <NavLink
+              to="/aicte"
+              end
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`
+              }
+            >
+              <Activity className="w-4 h-4" />
+              AICTE Monitoring
+            </NavLink>
+
+            <NavLink
+              to="/aicte/cases"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`
+              }
+            >
+              <FileText className="w-4 h-4" />
+              AICTE Case Directory
+            </NavLink>
+
+            <NavLink
+              to="/aicte/overlaps"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`
+              }
+            >
+              <ArrowRightLeft className="w-4 h-4" />
+              Overlap Review Queue
+            </NavLink>
+
+            <NavLink
+              to="/aicte/transfers"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`
+              }
+            >
+              <ArrowRightLeft className="w-4 h-4 text-purple-600" />
+              Inter-Bureau Transfers
+            </NavLink>
+
+            <NavLink
+              to="/aicte/notifications"
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-medium transition ${
+                  isActive
+                    ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                }`
+              }
+            >
+              <Bell className="w-4 h-4 text-amber-500" />
+              Alert Center
+            </NavLink>
+          </div>
         )}
 
         {role === 'INSTITUTION_HEAD' && (

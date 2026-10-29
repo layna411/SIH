@@ -42,6 +42,22 @@ export interface RegulatoryJurisdiction {
   is_active: boolean;
 }
 
+export interface BureauMembership {
+  id: number;
+  user_id: number;
+  user_name?: string;
+  user_email?: string;
+  organizational_unit_id: number;
+  unit_code?: string;
+  unit_name?: string;
+  membership_role: string;
+  designation?: string;
+  is_active: boolean;
+  assigned_by_user_id?: number;
+  created_at: string;
+  updated_at?: string;
+}
+
 export interface User {
   id: number;
   email: string;
@@ -55,6 +71,7 @@ export interface User {
   created_at: string;
   memberships: InstitutionMembership[];
   regulatory_jurisdictions?: RegulatoryJurisdiction[];
+  bureau_memberships?: BureauMembership[];
 }
 
 export interface UserInvitation {
@@ -246,6 +263,7 @@ export interface Grievance {
   student_name?: string;
   student_email?: string;
   student_id_number?: string;
+  assigned_officer_id?: number;
   assigned_officer_name?: string;
   due_date?: string;
   resolution_summary?: string;

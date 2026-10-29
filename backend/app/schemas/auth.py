@@ -2,6 +2,7 @@ from datetime import datetime
 from typing import Optional, List
 from pydantic import BaseModel, EmailStr, Field, ConfigDict, field_validator
 from app.models.enums import UserRoleEnum
+from app.schemas.organizational_unit import BureauMembershipResponse
 
 class TokenResponse(BaseModel):
     access_token: str
@@ -96,6 +97,7 @@ class UserResponse(BaseModel):
     updated_at: Optional[datetime] = None
     memberships: List[InstitutionMembershipSummary] = []
     regulatory_jurisdictions: List[JurisdictionSummary] = []
+    bureau_memberships: List[BureauMembershipResponse] = []
 
 class UserPasswordChangeRequest(BaseModel):
     current_password: str = Field(..., min_length=1, max_length=128)

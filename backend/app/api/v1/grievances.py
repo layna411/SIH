@@ -57,6 +57,7 @@ def build_summary(g: Grievance) -> GrievanceSummaryResponse:
         status=g.status,
         priority=g.priority,
         is_confidential=g.is_confidential,
+        assigned_officer_id=g.assigned_officer_id,
         assigned_officer_name=g.assigned_officer.full_name if g.assigned_officer else None,
         due_date=g.due_date,
         created_at=g.created_at,

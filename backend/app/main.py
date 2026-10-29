@@ -232,13 +232,13 @@ from sqlalchemy.orm import Session
 
 # System and Scheduler Status Endpoints
 @app.get(f"{v1_prefix}/system/scheduler-status", tags=["System"])
-def get_scheduler_status(current_user: User = Depends(require_roles([UserRoleEnum.SUPER_ADMIN]))):
+def get_scheduler_status(current_user: User = Depends(require_roles(UserRoleEnum.SUPER_ADMIN))):
     """Return background SLA scheduler operational telemetry."""
     return sla_scheduler.telemetry
 
 @app.post(f"{v1_prefix}/system/scheduler-run", tags=["System"])
 def trigger_scheduler_run(
-    current_user: User = Depends(require_roles([UserRoleEnum.SUPER_ADMIN])),
+    current_user: User = Depends(require_roles(UserRoleEnum.SUPER_ADMIN)),
     db: Session = Depends(get_db)
 ):
     """Synchronously execute an SLA monitoring and outbox dispatch cycle."""

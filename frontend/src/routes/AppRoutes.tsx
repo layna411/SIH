@@ -118,7 +118,7 @@ export const AppRoutes: React.FC = () => {
       </Route>
 
       {/* Protected AICTE Case Management & Cross-Bureau Monitoring */}
-      <Route element={<ProtectedRoute allowedRoles={['REGULATORY_ADMIN', 'SUPER_ADMIN']} />}>
+      <Route element={<ProtectedRoute allowedRoles={['REGULATORY_ADMIN', 'SUPER_ADMIN']} allowBureauMembers={true} />}>
         <Route element={<DashboardLayout />}>
           <Route path="/aicte" element={<AICTEIntegratedDashboard />} />
           <Route path="/aicte/cases" element={<AICTECaseList />} />

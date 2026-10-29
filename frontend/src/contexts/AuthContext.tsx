@@ -7,6 +7,9 @@ interface AuthContextType {
   token: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isBureauMember: boolean;
+  bureauUnits: number[];
+  hasBureauAccess: (unitId?: number) => boolean;
   login: (email: string, password: string) => Promise<User>;
   register: (payload: any) => Promise<User>;
   logout: () => void;
@@ -104,6 +107,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return memberRoles.some((r) => allowedRoles.includes(r));
   };
 
+  const isBureauMember = !!user?.bureau_memberships && user.bureau_memberships.some((bm) => bm.is_active);
+  const bureauUnits = user?.bureau_memberships?.filter((bm) => bm.is_active).map((bm) => bm.organizational_unit_id) || [];
+
+  const hasBureauAccess = (unitId?: number): boolean => {
+    if (!user) return false;
+    if (user.default_role === 'SUPER_ADMIN') return true;
+    if (!unitId) return isBureauMember;
+    return bureauUnits.includes(unitId);
+  };
+
   const setAuthSession = (newToken: string, newUser: User) => {
     setToken(newToken);
     setUser(newUser);
@@ -118,6 +131,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         token,
         isAuthenticated: !!user && !!token,
         isLoading,
+        isBureauMember,
+        bureauUnits,
+        hasBureauAccess,
         login,
         register,
         logout,

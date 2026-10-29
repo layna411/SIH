@@ -110,6 +110,7 @@ class GrievanceSummaryResponse(BaseModel):
     status: GrievanceStatusEnum
     priority: GrievancePriorityEnum
     is_confidential: bool
+    assigned_officer_id: Optional[int] = None
     assigned_officer_name: Optional[str] = None
     due_date: Optional[datetime] = None
     created_at: datetime

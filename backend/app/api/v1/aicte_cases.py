@@ -12,6 +12,7 @@ from app.core.permissions import (
     require_super_admin,
     get_user_bureau_unit_ids,
     check_bureau_access,
+    check_institution_access,
 )
 from app.models.enums import (
     UserRoleEnum,
@@ -207,17 +208,44 @@ def list_aicte_cases(
     - Unauthorized roles (students, college officers without Bureau roles) are denied.
     """
     authorized_unit_ids = get_user_bureau_unit_ids(current_user, db)
-    if not authorized_unit_ids and current_user.default_role != UserRoleEnum.SUPER_ADMIN:
+    is_super = current_user.default_role == UserRoleEnum.SUPER_ADMIN
+    is_regulatory = current_user.default_role == UserRoleEnum.REGULATORY_ADMIN
+
+    regulatory_inst_ids = []
+    if is_regulatory:
+        from app.models.institution import RegulatoryJurisdiction
+        from sqlalchemy import func
+        jurisdictions = db.query(RegulatoryJurisdiction).filter(
+            RegulatoryJurisdiction.user_id == current_user.id,
+            RegulatoryJurisdiction.is_active == True,
+        ).all()
+        direct_inst_ids = [j.institution_id for j in jurisdictions if j.institution_id]
+        assigned_states = [j.state.strip().lower() for j in jurisdictions if j.state]
+        state_inst_ids = []
+        if assigned_states:
+            state_insts = db.query(Institution.id).filter(
+                func.lower(Institution.state).in_(assigned_states)
+            ).all()
+            state_inst_ids = [r[0] for r in state_insts]
+        regulatory_inst_ids = list(set(direct_inst_ids + state_inst_ids))
+
+    if not is_super and not authorized_unit_ids and not (is_regulatory and regulatory_inst_ids):
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: you do not possess an active AICTE Bureau membership."
+            detail="Access forbidden: you do not possess an active AICTE Bureau membership or regulatory jurisdiction."
         )
 
     query = db.query(AICTECase)
 
-    # Unit boundary scoping
-    if current_user.default_role != UserRoleEnum.SUPER_ADMIN:
-        query = query.filter(AICTECase.current_unit_id.in_(authorized_unit_ids))
+    # Unit boundary and jurisdiction scoping
+    if not is_super:
+        conditions = []
+        if authorized_unit_ids:
+            conditions.append(AICTECase.current_unit_id.in_(authorized_unit_ids))
+        if is_regulatory and regulatory_inst_ids:
+            conditions.append(AICTECase.institution_id.in_(regulatory_inst_ids))
+        if conditions:
+            query = query.filter(or_(*conditions))
 
     if unit_id:
         if current_user.default_role != UserRoleEnum.SUPER_ADMIN and unit_id not in authorized_unit_ids:
@@ -405,10 +433,14 @@ def get_aicte_case_detail(
             detail=f"AICTE Case #{case_id} not found."
         )
 
-    if not check_bureau_access(current_user, case.current_unit_id, db):
+    has_access = check_bureau_access(current_user, case.current_unit_id, db)
+    if not has_access and current_user.default_role == UserRoleEnum.REGULATORY_ADMIN:
+        has_access = check_institution_access(current_user, case.institution_id, db)
+
+    if not has_access:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Access forbidden: you do not possess authorized membership in the handling Bureau."
+            detail="Access forbidden: you do not possess authorized membership in the handling Bureau or regulatory jurisdiction."
         )
 
     resp = _map_case_to_response(case)
@@ -670,7 +702,11 @@ def get_case_history(
             detail=f"AICTE Case #{case_id} not found."
         )
 
-    if not check_bureau_access(current_user, case.current_unit_id, db):
+    has_access = check_bureau_access(current_user, case.current_unit_id, db)
+    if not has_access and current_user.default_role == UserRoleEnum.REGULATORY_ADMIN:
+        has_access = check_institution_access(current_user, case.institution_id, db)
+
+    if not has_access:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="Access forbidden to this Bureau case history."

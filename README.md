@@ -556,6 +556,13 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - Advanced CSV Formula Injection Neutralization: Enhanced `sanitize_csv_value` to detect formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`, `%`) even when preceded by leading whitespace (spaces, tabs, carriage returns) while preserving legitimate numbers.
   - Notification IDOR Protection: Cross-user notification requests, read updates, and acknowledgements return `HTTP 404 Not Found` without disclosing ownership metadata.
   - Outbox Retry Bound & Teardown Preservation: Preserved persistent development and test databases on XAMPP MySQL.
+- **Role-Based Dashboard Coverage, Navigation Audit & Feature Accessibility (Phase I)**:
+  - Discrepancy Resolution: Resolved `/aicte/*` frontend restriction allowing Bureau officers with active `BureauMembership` to access unit-scoped AICTE monitoring, case directory, transfers, overlaps, and alert center.
+  - Active Membership Serialization: Updated `/auth/me` and `/auth/login` to serialize active `bureau_memberships` (with unit code, name, and role).
+  - Client-Side Scoped Navigation: Added `BureauMembership` interface, `isBureauMember`, and `hasBureauAccess` to AuthContext. Configured `ProtectedRoute` with `allowBureauMembers={true}` and dynamic sidebar rendering with an active Bureau badge.
+  - Campus-to-Regulatory Integration: Integrated `ReferGrievanceModal` into `HeadDashboard` (Escalated Grievances queue) and `OfficerDashboard` (Case Overview tab) allowing campus officials to refer complaints to AICTE (`/cases/refer-grievance`).
+  - Regulatory Admin State Scoping: Extended AICTE case listing and detail endpoints to support jurisdiction-scoped case oversight for Regulatory Admins based on active `RegulatoryJurisdiction`.
+  - Database Audit & Integrity: Audited actual XAMPP MySQL database (`eduresolve_ai`), confirming 6 active organizational units (`RB`, `PGRC`, `AB`, `RO_NORTH`, `RO_WEST`, `RO_SOUTH`) and 0 active staff memberships without fabricating data.
 - **Alembic Migration History**:
   - Phase B: `c7b12d3e4f5a` (Parent: `59f5f8fb2f6b`)
   - Phase C: `d8c23e4f5a6b` (Parent: `c7b12d3e4f5a`)
