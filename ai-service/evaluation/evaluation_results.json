@@ -1,0 +1,224 @@
+{
+  "timestamp": "2026-10-28T05:21:42.772426+00:00",
+  "model_path": "E:\\Layn\\SIH\\ai-service\\artifacts\\category_classifier.joblib",
+  "dataset_provenance": "150-sample curated developmental benchmark dataset",
+  "dataset_limitations": "This evaluation is performed on a synthetic developmental dataset. Real-world generalization on arbitrary regional student grievances remains unvalidated until operational historical datasets are collected with human ombudsperson reviews.",
+  "metrics": {
+    "num_eval_examples": 38,
+    "class_distribution": {
+      "OTHER": 4,
+      "HOSTEL": 4,
+      "EXAM": 4,
+      "FINANCE": 4,
+      "CONDUCT": 4,
+      "ADMIN": 3,
+      "ACADEMIC": 4,
+      "SCHOLARSHIP": 3,
+      "INFRA": 4,
+      "SUPPORT": 4
+    },
+    "accuracy": 0.6316,
+    "macro_precision": 0.6983,
+    "macro_recall": 0.6417,
+    "macro_f1": 0.6299,
+    "weighted_f1": 0.6245,
+    "per_category": {
+      "ACADEMIC": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1_score": 0.667,
+        "support": 4.0
+      },
+      "ADMIN": {
+        "precision": 0.5,
+        "recall": 1.0,
+        "f1_score": 0.667,
+        "support": 3.0
+      },
+      "CONDUCT": {
+        "precision": 0.4,
+        "recall": 0.5,
+        "f1_score": 0.444,
+        "support": 4.0
+      },
+      "EXAM": {
+        "precision": 0.5,
+        "recall": 0.75,
+        "f1_score": 0.6,
+        "support": 4.0
+      },
+      "FINANCE": {
+        "precision": 0.667,
+        "recall": 1.0,
+        "f1_score": 0.8,
+        "support": 4.0
+      },
+      "HOSTEL": {
+        "precision": 0.667,
+        "recall": 0.5,
+        "f1_score": 0.571,
+        "support": 4.0
+      },
+      "INFRA": {
+        "precision": 1.0,
+        "recall": 0.5,
+        "f1_score": 0.667,
+        "support": 4.0
+      },
+      "OTHER": {
+        "precision": 0.5,
+        "recall": 0.25,
+        "f1_score": 0.333,
+        "support": 4.0
+      },
+      "SCHOLARSHIP": {
+        "precision": 1.0,
+        "recall": 0.667,
+        "f1_score": 0.8,
+        "support": 3.0
+      },
+      "SUPPORT": {
+        "precision": 0.75,
+        "recall": 0.75,
+        "f1_score": 0.75,
+        "support": 4.0
+      }
+    },
+    "confusion_matrix": {
+      "labels": [
+        "ACADEMIC",
+        "ADMIN",
+        "CONDUCT",
+        "EXAM",
+        "FINANCE",
+        "HOSTEL",
+        "INFRA",
+        "OTHER",
+        "SCHOLARSHIP",
+        "SUPPORT"
+      ],
+      "matrix": [
+        [
+          2,
+          1,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          2,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          1,
+          0,
+          3,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          4,
+          0,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          1,
+          2,
+          0,
+          0,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          0,
+          1,
+          2,
+          1,
+          0,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0,
+          1
+        ],
+        [
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          2,
+          0
+        ],
+        [
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          3
+        ]
+      ]
+    }
+  }
+}

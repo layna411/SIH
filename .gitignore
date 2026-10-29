@@ -1,0 +1,30 @@
+# Python
+venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.pytest_cache/
+.coverage
+htmlcov/
+dist/
+build/
+*.egg-info/
+.env
+
+# Node / Frontend
+node_modules/
+frontend/dist/
+frontend/.env
+*.local
+
+# Database & Uploads
+*.db
+*.sqlite3
+backend/private_uploads/*
+!backend/private_uploads/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp

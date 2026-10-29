@@ -1,0 +1,752 @@
+[
+  {
+    "category": "ACADEMIC",
+    "title": "Professor absent for last 3 weeks without substitute",
+    "description": "Our Data Structures lecturer has been absent for the past three weeks with no replacement faculty assigned. Half the syllabus is incomplete before midterms."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Incomplete syllabus coverage before end semester exams",
+    "description": "The course instructor for Advanced Thermodynamics rushed through unit 4 and unit 5 in one lecture. We have not been provided reference notes or problem sets."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Unfair internal continuous assessment marks deduction",
+    "description": "My internal assessment marks for Operating Systems lab were penalized by 15 marks despite submitting all lab records on time and attending all practicals."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Attendance discrepancy in student ERP portal",
+    "description": "My recorded attendance in Signals and Systems shows 68% whereas my actual attendance signed on the physical register is 82%. This makes me falsely debarred from writing exams."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Clashing timetable for elective courses in 6th semester",
+    "description": "Cloud Computing and Cyber Security electives are scheduled at the exact same hour on Mondays and Wednesdays. Dual enrolled students cannot attend both lectures."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Project mentor refusing to approve final capstone topic",
+    "description": "Our assigned guide has rejected three revised capstone project proposals without constructive feedback and is not available during consultation hours."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Outdated syllabus taught in artificial intelligence course",
+    "description": "The Machine Learning curriculum covers obsolete 2005 algorithms and lacks modern deep learning frameworks that are required for industrial placements."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Language barrier with newly appointed visiting faculty",
+    "description": "The visiting mathematics professor does not lecture in English or clarify doubts in class, resulting in severe comprehension difficulties for non-native speakers."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Laboratory instructor not providing feedback on lab reports",
+    "description": "All physics laboratory practical submissions have been kept without evaluation or feedback for the entire semester."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Assignment grading criteria not communicated beforehand",
+    "description": "Students were marked down severely on the software engineering team project for formatting rules that were never stated in the project brief."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Tutorial sessions cancelled repeatedly by teaching assistants",
+    "description": "The tutorial classes for Engineering Mechanics have not been conducted for the past month, leaving multiple problem sets unsolved."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Course credits mismatch between curriculum handbook and portal",
+    "description": "The academic regulations handbook states 4 credits for Numerical Analysis but the portal shows 3 credits, affecting graduation calculations."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Department refused change of branch request despite CGPA",
+    "description": "I achieved a 9.2 CGPA qualifying for branch transfer to Computer Science, but the academic council rejected the request without official explanation."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Disproportionate workload across elective subjects",
+    "description": "The elective subject has 5 weekly assignments and two mini projects which violates the institute course credit guidelines."
+  },
+  {
+    "category": "ACADEMIC",
+    "title": "Classroom lectures frequently rescheduled to late evenings",
+    "description": "The department head is rescheduling morning core lectures to 6:30 PM, causing severe difficulties for day scholars commuting via public transport."
+  },
+  {
+    "category": "EXAM",
+    "title": "Examination admit card not generated on portal",
+    "description": "The end-term examination portal shows 'Admit Card Withheld' even though all tuition dues and library clearances have been cleared."
+  },
+  {
+    "category": "EXAM",
+    "title": "Delay in re-evaluation results of 5th semester",
+    "description": "I applied for re-evaluation of my Mathematics 3 paper two months ago. The supplementary exam date is approaching and re-check marks are still pending."
+  },
+  {
+    "category": "EXAM",
+    "title": "Spelling mistake on final official degree marksheet",
+    "description": "My mother's name and my surname are misspelled on the provisional degree certificate and consolidated marksheet."
+  },
+  {
+    "category": "EXAM",
+    "title": "Examination hall ticket clash with competitive gate exam",
+    "description": "The university semester exam timetable overlaps directly with the national GATE examination date, causing career disadvantage."
+  },
+  {
+    "category": "EXAM",
+    "title": "Incorrect subject code entered on end semester grade card",
+    "description": "My grade card displays EE301 instead of CS301, showing an F grade for a subject I never registered for or attended."
+  },
+  {
+    "category": "EXAM",
+    "title": "Evaluation error in numerical question total calculation",
+    "description": "Upon receiving the evaluated answer script photocopy, Question 4 marks were not added to the grand total on the front cover page."
+  },
+  {
+    "category": "EXAM",
+    "title": "Examination center allocated 60 km away from campus",
+    "description": "The university has assigned an exam center in another district with no direct train or bus connectivity for the upcoming theory papers."
+  },
+  {
+    "category": "EXAM",
+    "title": "Malpractice allegation framed without providing evidence",
+    "description": "The flying squad confiscated my answer sheet claiming unfair means without CCTV footage or any prohibited material on my desk."
+  },
+  {
+    "category": "EXAM",
+    "title": "Supplementary examination schedule published with 24 hours notice",
+    "description": "The backlog timetable was posted yesterday evening for an exam scheduled tomorrow morning, providing zero revision time."
+  },
+  {
+    "category": "EXAM",
+    "title": "Online examination platform crashed during final quiz",
+    "description": "The browser lockdown portal crashed 20 minutes into the test, auto-submitting incomplete answers with no opportunity for re-attempt."
+  },
+  {
+    "category": "EXAM",
+    "title": "Practical viva external examiner arrived 4 hours late",
+    "description": "Students were kept waiting in the hallway from 9 AM to 2 PM without food or seating arrangements for the chemistry practical viva."
+  },
+  {
+    "category": "EXAM",
+    "title": "Duplicate question paper booklet issued in final exam",
+    "description": "The question paper distributed had 4 pages missing from Section B, leading to lost time during the university examination."
+  },
+  {
+    "category": "EXAM",
+    "title": "Grade point average calculation formula error in transcript",
+    "description": "The SGPA recorded on the student dashboard does not match the credit-weighted average outlined in the academic statute."
+  },
+  {
+    "category": "EXAM",
+    "title": "Grace marks not awarded as per university ordinance",
+    "description": "I am short by 1 mark to clear the threshold for passing and am entitled to 2 grace marks under Ordinance 12, but the controller denied it."
+  },
+  {
+    "category": "EXAM",
+    "title": "Late fee charged for examination registration due to portal downtime",
+    "description": "The payment gateway was offline during the regular deadline day, and the system is now imposing a Rs. 1500 late registration fee."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Tuition fee refund not processed after admission withdrawal",
+    "description": "I withdrew my admission within the UGC mandated 100% refund timeframe in August. The accounts section has not refunded the Rs. 85,000 tuition fee."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Double debit of semester tuition fees through payment gateway",
+    "description": "While paying fees through the online portal, Rs. 60,000 was deducted twice from my bank account. The accounts office has not reversed the duplicate charge."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Unjustified caution deposit deduction on graduation clearance",
+    "description": "The college accounts department deducted Rs. 5,000 from my refundable caution deposit citing general campus wear and tear without itemized dues."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Excess bus fee charged during online semester",
+    "description": "Transport fee was charged for the full semester even though classes were held remotely and buses did not operate."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Official fee receipt not issued after bank transfer",
+    "description": "NEFT transaction of semester fees was acknowledged by bank 10 days ago, but accounts clerk has not generated the stamped receipt required for education loan."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Late fee fine applied despite verified bank server delay",
+    "description": "The bank took 48 hours to clear the RTGS, and the institute accounts section is imposing an unfair Rs. 2,000 late payment penalty."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Discrepancy in installment fee structure for economically weaker students",
+    "description": "The approved fee installment plan agreed upon during admission is being revoked by the accounts officer who demands full payment."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Hostel mess rebate not credited for authorized leave days",
+    "description": "I was on approved hospital leave for 20 days with medical certificate, but the mess accounts section refused to credit the daily rebate."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Discrepancy in convocation fee charged on portal",
+    "description": "The university senate notification fixed the convocation fee at Rs. 1,000, but the portal is forcing students to pay Rs. 3,500."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Bank demand draft misplaced by accounts department",
+    "description": "I submitted a physical DD of Rs. 45,000 at the counter with stamped receipt, but the portal still lists my fee status as unpaid."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Sudden unannounced fee hike mid-academic year",
+    "description": "The institute announced a 25% hike in laboratory and development fees halfway through the academic year, in violation of admission prospectus."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Dispute regarding fine on unreturned library book that was paid",
+    "description": "The library fine receipt of Rs. 300 was submitted, but the finance office portal continues to block no-dues clearance."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Health insurance premium deducted without policy card issuance",
+    "description": "Mandatory student mediclaim fee of Rs. 1,200 was debited with semester fees, but no insurance policy number or card has been provided."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Examination re-checking fee refund for grade improvement",
+    "description": "According to university rules, if marks increase by more than 10%, the re-evaluation fee is refundable. My marks increased by 14% but refund is pending."
+  },
+  {
+    "category": "FINANCE",
+    "title": "Education loan disbursement acknowledgement letter delayed",
+    "description": "The bank requires a demand letter and bonafide fee estimate for the next academic year to release loan tranche, which finance desk is delaying."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "National scholarship portal verification pending at college nodal officer",
+    "description": "The deadline for National Scholarship Portal (NSP) institutional verification is in 3 days, and the college nodal officer has not validated applications."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Post-matric scholarship disbursement delayed by 6 months",
+    "description": "State government post-matric scholarship funds were released to the college account in March, but the administration has not credited it to student accounts."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Merit scholarship renewal withheld without explanation",
+    "description": "I maintained an 8.8 CGPA exceeding the 8.0 criteria for merit scholarship renewal, but my second year scholarship instalment was rejected."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Incorrect income criteria documentation rejected by scholarship cell",
+    "description": "The scholarship office rejected my father's revenue authority income certificate stating it needs tahsildar seal, which it already possesses."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Tuition fee waiver under TFW scheme not reflected in fee bill",
+    "description": "I was admitted under the state AICTE Tuition Fee Waiver (TFW) quota, but the institute fee counter is generating full tuition fee bills."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Research fellowship stipend delayed for doctoral scholars",
+    "description": "Junior Research Fellowship (JRF) monthly stipend has not been disbursed for four consecutive months, causing severe livelihood distress."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Single girl child scholarship portal form not endorsed by registrar",
+    "description": "The UGC Pragati/Single Girl Child scheme application requires the head of institute sign and seal, which has been lying on the desk for two weeks."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "SC/ST scholarship fee reimbursement adjustment delay",
+    "description": "The social welfare department scholarship has been sanctioned, but the college refuses to issue hall ticket until funds hit the college account."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "MHRD GATE scholarship attendance tracking missing in portal",
+    "description": "The M.Tech GATE stipend attendance portal was not updated by the department coordinator, resulting in forfeiture of this month's allowance."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Sports quota scholarship incentive award not disbursed",
+    "description": "Students who represented the university at All India Inter-University Games have not received the approved cash incentive and scholarship waiver."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Disability scholarship application forwarded with wrong category code",
+    "description": "The scholarship desk submitted my application under general category instead of PwD category, causing it to be rejected by the state portal."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Economically backward class (EBC) concession cancelled unexpectedly",
+    "description": "My 50% fee concession under the EBC scheme was unilaterally discontinued without any change in family income or academic standing."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Minority scholarship biometric authentication machine not working",
+    "description": "The scholarship cell biometric scanner required for central minority scholarship re-validation has been malfunctioning for a week."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Alumni endowment fund financial aid check bounced",
+    "description": "The financial assistance check provided from the alumni emergency student fund was returned by the bank due to signature mismatch."
+  },
+  {
+    "category": "SCHOLARSHIP",
+    "title": "Bonafide scholarship certificate for external foundation delayed",
+    "description": "An external philanthropic trust offering Rs. 50,000 scholarship requires an institutional bonafide with fee breakdown, which the office refuses to issue."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Contaminated drinking water in Block B boys hostel",
+    "description": "The RO water purifier in Block B hostel has been dispensing turbid, foul-smelling water. Multiple students have fallen ill with stomach infections."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Hostel mess food quality unhygienic with insects found",
+    "description": "Insects were found in the dinner dal and rice at the girls hostel mess. Despite complaints to the warden, hygiene has not improved."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Frequent power outages in hostel without backup generator",
+    "description": "Hostel Block C suffers from 6-hour daily electricity cuts during exam week, and the diesel backup generator has not been fueled."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Hostel room ceiling plaster collapsing during monsoon",
+    "description": "Water leakage from the hostel ceiling has caused concrete plaster to peel and fall onto study desks in room 304."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Broken bathroom doors and unhygienic washrooms in Block A",
+    "description": "Four out of six bathroom cubicles in the 2nd floor hostel wing have broken latches and no running water in the morning."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Unfair room allotment by hostel administration",
+    "description": "Senior students were allotted triple-sharing rooms while junior quota rooms with AC were given out through non-transparent favoritism."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Excessive and discriminatory curfew timings for girls hostel",
+    "description": "The girls hostel imposes a 6:30 PM curfew while boys hostel is open until 10:30 PM, restricting access to the central campus library."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Non-functioning air coolers in summer with 44 degree heat",
+    "description": "The desert coolers in the top floor rooms have damaged motors and the hostel caretaker has refused to repair them despite multiple complaints."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Stray dogs entering hostel corridors and biting students",
+    "description": "The hostel boundary wall is broken, allowing aggressive stray dog packs to roam inside the ground floor residential corridors at night."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Hostel security guards misbehaving with residents",
+    "description": "The evening security guards verbally abuse students returning from lab work and refuse entry even with valid departmental permission slips."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "No hot water in winter due to broken solar water heaters",
+    "description": "The solar geyser system in the winter months has been out of service for three weeks with zero maintenance response."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Theft of laptops and personal belongings in hostel rooms",
+    "description": "Multiple locked rooms on the first floor were broken into over the weekend. The warden refuses to check CCTV cameras or call police."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Hostel laundry washing machines broken down for a month",
+    "description": "All four coin-operated laundry machines in the common facility are out of order, forcing 300 residents to wash heavy bedding by hand."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Bedbug infestation in dormitory mattresses",
+    "description": "The provided wooden beds and mattresses in Block D have severe bedbug infestation causing sleep deprivation and allergic rashes."
+  },
+  {
+    "category": "HOSTEL",
+    "title": "Unjustified fines levied on entire hostel floor for corridor noise",
+    "description": "The warden imposed a collective fine of Rs. 1,000 on every resident of the third floor without identifying individual culprits."
+  },
+  {
+    "category": "INFRA",
+    "title": "Campus wide Wi-Fi network disconnected across academic blocks",
+    "description": "The institutional Wi-Fi network has been non-functional in the computer science and electronics departments for over two weeks, crippling research work."
+  },
+  {
+    "category": "INFRA",
+    "title": "Damaged laboratory equipment in digital electronics lab",
+    "description": "More than half of the cathode ray oscilloscopes (CRO) and function generators in the circuit lab are defective, leaving students unable to complete experiments."
+  },
+  {
+    "category": "INFRA",
+    "title": "Central library books collection outdated and lacking textbooks",
+    "description": "The library does not have copies of the prescribed syllabus textbooks for the 2024 revised regulation, with only 2 reference copies for 120 students."
+  },
+  {
+    "category": "INFRA",
+    "title": "Projectors in lecture halls non-functional with broken cables",
+    "description": "Classroom 402 and 405 projectors have burnt out lamps and severed HDMI cables, making digital presentations and lectures impossible."
+  },
+  {
+    "category": "INFRA",
+    "title": "No air conditioning or ventilation in computer center",
+    "description": "The high-performance computing lab housing 80 workstations has broken AC units, causing systems to thermal throttle and room temperatures to exceed 40C."
+  },
+  {
+    "category": "INFRA",
+    "title": "Sanitary washrooms unusable with blocked drainage in civil block",
+    "description": "The student toilets in the Civil Engineering department have had overflowing drainage and no running water for five days."
+  },
+  {
+    "category": "INFRA",
+    "title": "Auditorium sound system malfunctioning during academic seminar",
+    "description": "The audio equipment in the main seminar hall has severe feedback squeals and broken microphones, disrupting guest expert talks."
+  },
+  {
+    "category": "INFRA",
+    "title": "Broken desks and chairs causing injuries in lecture hall 101",
+    "description": "Several wooden benches have exposed nails and splintered writing tablets that tear clothing and pose physical injury risks."
+  },
+  {
+    "category": "INFRA",
+    "title": "No drinking water facility on the 3rd floor of science block",
+    "description": "The water cooler on the top floor has been disconnected for six months, forcing students to walk down three flights of stairs between classes."
+  },
+  {
+    "category": "INFRA",
+    "title": "Inadequate campus street lighting posing safety risks at night",
+    "description": "The walkway connecting the engineering workshops and the main gate has zero working streetlights, making it pitch dark after 7 PM."
+  },
+  {
+    "category": "INFRA",
+    "title": "Elevator in academic block frequently trapped between floors",
+    "description": "The passenger elevator in the 7-story administrative building has broken safety sensors and trapped four students for 45 minutes yesterday."
+  },
+  {
+    "category": "INFRA",
+    "title": "Chemistry lab fume hoods non-functional during acid experiments",
+    "description": "The exhaust ventilation fume hoods in the organic chemistry laboratory are broken, exposing students to noxious chlorine and acid vapors."
+  },
+  {
+    "category": "INFRA",
+    "title": "Gymnasium equipment broken with frayed cables",
+    "description": "The fitness center equipment has broken weight pulleys and frayed steel cables that risk causing serious physical trauma to users."
+  },
+  {
+    "category": "INFRA",
+    "title": "Campus bus service cancelled on key suburban transit routes",
+    "description": "The college bus route serving the eastern suburbs was abruptly terminated without alternative transport arrangements for 80 day-scholars."
+  },
+  {
+    "category": "INFRA",
+    "title": "Canteen serving uninspected expired packaged food",
+    "description": "The campus cafeteria was found selling beverages and snack packets past their printed best-before expiration date."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Delay in issuing official transfer and migration certificate",
+    "description": "I applied for my migration certificate and transfer certificate (TC) three weeks ago for higher studies abroad. The administrative desk has not signed the documents."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Student ID card not issued after three months of enrollment",
+    "description": "First-year engineering students have not been provided permanent RFID student ID cards, causing problems in accessing library and examination halls."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Bonafide certificate request ignored by academic registrar",
+    "description": "An urgent bonafide certificate needed for passport renewal has been pending with the dispatch section for over 15 working days."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Incorrect date of birth recorded on permanent student profile",
+    "description": "My 10th standard matriculation certificate shows DOB as 14/05/2003, but the university ERP database entered 14/05/2004 and refuses to rectify without affidavits."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Non-responsive administrative staff during counter inquiry hours",
+    "description": "The student affairs counter closes 2 hours before the scheduled 4 PM closing time, leaving working students unable to submit clearance paperwork."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Delay in returning original 12th standard marksheets",
+    "description": "Original school leaving certificates deposited during admission counseling have not been returned even after completing 2nd semester."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Official transcript sealed envelope not provided for WES evaluation",
+    "description": "The registrar office refused to stamp and seal the international credential evaluation transcript envelope as per standard WES protocols."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Name change gazette notification not updated in university system",
+    "description": "I submitted the official government gazette notification for my legal name change three months ago, but the degree portal still shows the old name."
+  },
+  {
+    "category": "ADMIN",
+    "title": "No-dues clearance signature delayed by sports department",
+    "description": "The physical education director is refusing to sign the final graduation clearance slip alleging unreturned sports kit that was never issued to me."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Medical leave application not entered into academic portal",
+    "description": "Hospital discharge certificate submitted in person to the dean's office was misplaced, resulting in unjustified shortage of attendance record."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Character certificate issued with incorrect enrollment year",
+    "description": "The character certificate mentions my study period as 2019-2022 instead of 2020-2024, creating doubts with prospective employers."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Provisional degree certificate verification email not answered",
+    "description": "My recruiting employer's background verification agency sent two official verification emails that the university registrar has left unanswered for 30 days."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Student grievance cell contact details not displayed on website",
+    "description": "The institutional website lacks the mandatory ombudsperson contact email, physical address, and grievance redressal committee phone numbers."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Bus pass concession form rejected due to clerk absence",
+    "description": "The state transport bus concession forms require the college seal, but the designated clerk has been absent with no alternate staff assigned."
+  },
+  {
+    "category": "ADMIN",
+    "title": "Duplicate security fee demanded for issuing replacement smart card",
+    "description": "My student smart card was damaged due to reader defect, and the administrative office is imposing a punitive penalty instead of nominal replacement cost."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Physical ragging and harassment by senior students in hostel",
+    "description": "Senior students forced first-year residents into room 204 at midnight, subjecting them to verbal humiliation and physical assault. Immediate anti-ragging squad intervention required."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Sexual harassment by faculty member during project review",
+    "description": "A professor made inappropriate advances and suggestive remarks during a one-on-one thesis review, threatening poor marks if not complied with. Needs urgent Internal Complaints Committee (ICC) probe."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Verbal caste-based discrimination by department instructor",
+    "description": "The lab assistant routinely uses derogatory casteist slurs against reserved category students and openly disparages affirmative action in class."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Cyberbullying and non-consensual image sharing on social media",
+    "description": "Students from the senior batch created an anonymous Instagram page posting defaming memes and morphed photographs of female classmates without consent."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Physical brawl and weapon threat outside college gate",
+    "description": "A group of hostile individuals gathered outside the main campus gate with iron rods and threatened junior students following a sports dispute."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Stalking and intimidation of student near campus library",
+    "description": "A male student has been persistently following, cornering, and intimidating a female student on her walk to the girls hostel despite clear warnings to stop."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Extortion of money from junior day-scholars on college buses",
+    "description": "Third-year students are demanding weekly cash payments from first-year students on bus route 14 under threat of physical violence."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Religious discrimination and slurs used during cultural fest auditions",
+    "description": "Organizers of the annual festival made derogatory communal remarks and excluded students on the basis of their religious background."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Smoking and illicit substance abuse inside hostel common room",
+    "description": "A group of residents openly consumes alcohol and narcotics in the 3rd floor lounge, creating an unsafe and intimidating environment for other students."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Vandalism of student vehicle parked in campus parking lot",
+    "description": "My two-wheeler had its tires slashed and fuel tank damaged by senior students after an argument regarding student council elections."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Dean of student welfare not taking action on formal ragging complaint",
+    "description": "A written complaint against senior students submitted to the anti-ragging committee 10 days ago has not yielded any inquiry or protective measures."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Blackmail and extortion by laboratory assistant for viva marks",
+    "description": "The technician demands personal favors and electronic gadgets under threat of failing students in the end semester practical examination."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Hostile environment and verbal abuse by departmental security guard",
+    "description": "The main building guard routinely directs misogynistic comments towards female scholars wearing western attire."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Threatening WhatsApp messages sent to student election candidates",
+    "description": "Anonymous burner phone numbers are sending death threats and kidnapping warnings to candidate running for student senate president."
+  },
+  {
+    "category": "CONDUCT",
+    "title": "Forced participation in unofficial senior initiation rituals",
+    "description": "First-year students are being coerced into performing degrading chores and physical drills late at night under threat of social boycott."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Wheelchair ramp missing at main entrance of examination center",
+    "description": "The examination building has a steep 8-step staircase with no wheelchair ramp, making it inaccessible for students with locomotive disabilities."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Elevator key withheld from orthopedically disabled student",
+    "description": "The elevator operator locked the lift and refused access to a student on crutches, claiming the lift is reserved exclusively for senior faculty."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Scribe allocation denied for visually impaired student for exams",
+    "description": "The examination cell has refused to approve an authorized scribe for a student with 80% visual impairment despite timely medical submission."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Screen reading software not installed in campus computer laboratory",
+    "description": "The department computers lack JAWS or NVDA accessibility software required for blind students taking programming practicals."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "No braille signage or tactile paving in new academic complex",
+    "description": "The newly inaugurated multi-story building lacks braille room number plates and tactile floor guiding paths for visually impaired students."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Mental health counseling center closed during peak exam period",
+    "description": "The campus psychological counselor is unavailable and the counseling cell has remained locked for three weeks during semester examinations."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Accessible disability washroom locked and used as janitor storage",
+    "description": "The only dedicated PwD toilet on the ground floor is locked with a padlock and filled with cleaning mops and chemical drums."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Sign language interpreter not provided for hearing impaired student",
+    "description": "Class lectures and university orientation presentations have zero sign language assistance or live captions for deaf students."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Emergency medical room lacks basic first aid and oxygen cylinder",
+    "description": "When a student suffered an acute asthma attack in class, the health center had no inhaler or oxygen and the nurse was absent."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Audio textbooks and accessible digital study materials unavailable",
+    "description": "The central library has not provided digital accessible format textbooks or audiobooks requested by students with learning disabilities."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Classroom relocation denied for student with temporary leg fracture",
+    "description": "The academic head refused to move a core class from the 4th floor to the ground floor for a student recovering from knee surgery."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Ambulance not available during on-campus sports injury emergency",
+    "description": "A student suffered a compound fracture during football practice, and the university ambulance had a dead battery and no driver."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Special accommodation time not granted during continuous assessments",
+    "description": "Dyslexic student with approved medical dispensation was not granted the statutory 20 minutes compensatory extra time per hour."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Hostel room on ground floor denied to student with severe disability",
+    "description": "A student with cerebral palsy was allotted a room on the third floor of a hostel block with no functioning elevator."
+  },
+  {
+    "category": "SUPPORT",
+    "title": "Sensory overload safe room not provided during campus festivals",
+    "description": "Neurodivergent students requested a quiet sensory space during the annual festival which was dismissed without consideration."
+  },
+  {
+    "category": "OTHER",
+    "title": "Lost and found desk at student union not maintaining register",
+    "description": "Valuable items turned in at the student union desk are not logged in any logbook, leading to lost wristwatches and calculators going missing."
+  },
+  {
+    "category": "OTHER",
+    "title": "Campus stray cattle causing traffic obstruction near gates",
+    "description": "Cows and stray animals frequently block the main vehicular entrance, causing near accidents during morning rush hours."
+  },
+  {
+    "category": "OTHER",
+    "title": "Disposal of biomedical waste behind campus clinic unhygienic",
+    "description": "Used syringes and cotton swabs are dumped in an open plastic bin behind the health center without biohazard segregation."
+  },
+  {
+    "category": "OTHER",
+    "title": "Parking fee charged for bicycles inside student parking shed",
+    "description": "Contractor at the bicycle stand is unlawfully charging students Rs. 10 daily despite campus guidelines allowing free non-motorized parking."
+  },
+  {
+    "category": "OTHER",
+    "title": "Noise pollution from unauthorized construction near study hall",
+    "description": "Heavy jackhammers and drilling machines are operated adjacent to the reading room during designated quiet study hours."
+  },
+  {
+    "category": "OTHER",
+    "title": "Campus bank branch ATM out of cash for two consecutive weeks",
+    "description": "The solitary automated teller machine on campus has displayed 'Out of Service' for 14 days with no cash replenishment."
+  },
+  {
+    "category": "OTHER",
+    "title": "Courier and parcel delivery packages denied entry at security gate",
+    "description": "Guards refuse to accept educational book parcels or admit courier delivery agents, forcing students to miss class to collect books outside."
+  },
+  {
+    "category": "OTHER",
+    "title": "College magazine editorial committee rejecting articles arbitrarily",
+    "description": "The student editorial board is censoring student opinion pieces without clear editorial criteria or faculty review."
+  },
+  {
+    "category": "OTHER",
+    "title": "Alumni association portal registration link broken",
+    "description": "Graduating seniors attempting to register for the official alumni network find the portal link returning 500 server errors."
+  },
+  {
+    "category": "OTHER",
+    "title": "Lack of waste segregation bins across campus walkways",
+    "description": "No separate green and blue waste bins are provided, leading to plastic bottles and food waste mixing in open overflow bins."
+  },
+  {
+    "category": "OTHER",
+    "title": "Campus bookstore charging above printed maximum retail price (MRP)",
+    "description": "The authorized cooperative store is selling stationary and engineering chart sheets at prices exceeding the manufacturer MRP."
+  },
+  {
+    "category": "OTHER",
+    "title": "Bird nests and pigeon droppings inside central library reading room",
+    "description": "Open windows in the library reading room allow pigeons to enter, causing unhygienic droppings on tables and book racks."
+  },
+  {
+    "category": "OTHER",
+    "title": "Tree branches falling on parked vehicles during thunderstorm",
+    "description": "Overhanging dead branches near the staff quarters parking have not been trimmed and crushed a student scooter yesterday."
+  },
+  {
+    "category": "OTHER",
+    "title": "Campus postal sub-office not selling standard postal stamps",
+    "description": "The on-campus post office frequently runs out of standard stamps and registered post envelopes needed for official job applications."
+  },
+  {
+    "category": "OTHER",
+    "title": "General inquiry desk phone number unanswered during business hours",
+    "description": "The central switchboard telephone number published on the university portal rings out continuously with no receptionist answering."
+  }
+]

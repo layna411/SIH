@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: eduresolve_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root_secure_password
+      MYSQL_DATABASE: eduresolve_ai
+      MYSQL_USER: eduresolve_user
+      MYSQL_PASSWORD: eduresolve_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: eduresolve_backend
+    environment:
+      - DATABASE_URL=mysql+pymysql://eduresolve_user:eduresolve_pass@mysql:3306/eduresolve_ai?charset=utf8mb4
+      - JWT_SECRET_KEY=eduresolve-production-jwt-key-replace-with-secure-value
+      - FRONTEND_ORIGINS=["http://localhost:5173", "http://127.0.0.1:5173"]
+    ports:
+      - "8000:8000"
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: eduresolve_frontend
+    ports:
+      - "5173:5173"
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+volumes:
+  mysql_data:
