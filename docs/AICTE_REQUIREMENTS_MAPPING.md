@@ -630,4 +630,70 @@ Detailed entity models, relationship diagrams, and the phased implementation roa
    - `ProceduralActionLog.tsx` & `ProceduralActionModal.tsx`: Procedural action timeline and entry modal.
    - `CreateAICTECaseModal.tsx` & `ReferGrievanceModal.tsx`: Authorized direct intake and grievance referral workflows.
 
+---
+
+## 12. Phase D Implementation Status (Completed)
+
+**Migration Revision:** `e9f34a5b6c7d` (Parent: `d8c23e4f5a6b`)  
+**Implementation Date:** October 2026  
+**Status:** **PHASE D COMPLETED**
+
+### Delivered Features in Phase D
+1. **Dedicated Cross-Bureau Overlap Table (`aicte_case_overlaps`):**
+   - Columns: `id`, `case_a_id`, `case_b_id`, `institution_id`, `status` (`PENDING_REVIEW`, `CONFIRMED_DUPLICATE`, `CONFIRMED_RELATED`, `REJECTED`, `DEFERRED`), `similarity_score`, `match_reasons`, `signals`, `reviewed_by_user_id`, `reviewed_at`, `review_notes`, `created_at`, `updated_at`.
+   - Canonical ordering constraint `case_a_id < case_b_id` and unique constraint `uq_aicte_case_overlaps_pair`.
+2. **Case Linking Table (`aicte_case_links`):**
+   - Columns: `id`, `case_a_id`, `case_b_id`, `institution_id`, `link_type` (`DUPLICATE_OF`, `RELATED_TO`), `coordination_notes`, `linked_by_user_id`, `is_active`, `created_at`, `updated_at`.
+   - Preserves independent statutory dockets, reference numbers, and life-cycles without automated merging or case destruction.
+3. **Multi-Signal Overlap Detection Engine:**
+   - Jaccard + Cosine word overlap on subjects, TF-IDF cosine similarity on descriptions, category concordance, official reference number exact matching, temporal proximity (90 days), and regulatory allegation keywords.
+   - Narrative redaction protecting complainant identities and private details across unauthorized Bureaus.
+4. **Human Review Lifecycle & API Endpoints:**
+   - `POST /api/v1/aicte/cases/{id}/detect-overlaps`: Scan for potential overlaps.
+   - `GET /api/v1/aicte/overlaps/pending`: Paginated queue of unreviewed overlap alerts.
+   - `POST /api/v1/aicte/overlaps/{id}/review`: Decision workflow with mandatory notes.
+   - `POST /api/v1/aicte/cases/{id}/links`: Coordinated case linking.
+5. **Frontend Overlap Management Suite:**
+   - `AICTEOverlapQueue.tsx`, `AICTEOverlapDetail.tsx`, `AICTECaseRelationships.tsx`.
+
+---
+
+## 13. Phase E Implementation Status (Completed)
+
+**Migration Revision:** `f0a45b6c7d8e` (Parent: `e9f34a5b6c7d`)  
+**Implementation Date:** October 2026  
+**Status:** **PHASE E COMPLETED**
+
+### Delivered Features in Phase E
+1. **Formal Inter-Bureau Transfer Ledger (`aicte_case_transfers` table):**
+   - Columns: `id`, `case_id` (FK -> `aicte_cases.id`, CASCADE), `from_unit_id` (FK -> `organizational_units.id`), `to_unit_id` (FK -> `organizational_units.id`), `initiated_by_user_id` (FK -> `users.id`), `proposed_assignee_id` (FK -> `users.id`, nullable), `transfer_reason` (Text, required substantive reason), `handover_summary` (Text, confidential context), `transfer_status` (`PENDING_ACCEPTANCE`, `ACCEPTED`, `REJECTED`, `CANCELLED`), `prior_case_status` (VARCHAR(50), required for exact restoration), `initiated_at`, `responded_at`, `responded_by_user_id` (FK -> `users.id`, nullable), `response_notes` (Text, nullable), `accepted_assignee_id` (FK -> `users.id`, nullable), `created_at`, `updated_at`.
+   - Check constraint `ck_case_transfer_distinct_units`: `from_unit_id != to_unit_id`.
+   - Optimized indexes on `case_id`, `transfer_status`, `from_unit_id`, `to_unit_id`, and `initiated_at`.
+2. **Transfer Lifecycle & State Machine:**
+   - **Initiate Transfer:** Authorized officer in originating Bureau proposes transfer with required reason and optional receiving officer. Validates destination unit activity and proposed officer's active membership. Case moves to `TRANSFER_PENDING`. **Handling unit (`current_unit_id`) and assigned officer remain strictly unchanged until formal acceptance.**
+   - **Accept Transfer:** Receiving Bureau official accepts transfer. Atomically sets transfer status to `ACCEPTED`, updates case `current_unit_id = to_unit_id`, optionally reassigns to receiving officer, advances case status to `TRANSFERRED`, logs `CaseAction`, writes audit event, and queues notification to originating unit.
+   - **Reject Transfer:** Receiving Bureau official declines proposal with mandatory substantive reason. Atomically marks transfer `REJECTED`, preserves originating unit and assignment, restores case to exact `prior_case_status` (e.g. `UNDER_PROCESS`), logs procedural action, writes audit event, and queues outbox notification.
+   - **Cancel Transfer:** Initiator or Super Admin cancels pending proposal prior to receiving decision. Marks transfer `CANCELLED`, restores exact prior status, and logs procedural audit.
+3. **Concurrency & Integrity Safeguards:**
+   - Duplicate pending transfer prevention: Active pending transfers for the same case return `HTTP 409 Conflict`.
+   - Row-level locking (`with_for_update()`) and state check prevent concurrent decisions (e.g. concurrent accept and reject).
+   - Direct unit reassignment protection: Modified `/cases/{case_id}/assign` to strictly prohibit altering `current_unit_id` for non-SuperAdmin users, preventing bypass of the formal transfer workflow.
+4. **Cross-Bureau Confidentiality & Authorization:**
+   - Bureau-scoped visibility: Transfer listings and reviews are restricted to members of the originating and receiving Bureaus (or `SUPER_ADMIN`).
+   - Narrative shielding: Unprivileged cross-bureau viewers see case references and transfer metadata, while confidential complainant particulars remain shielded.
+5. **Outbox Notification Integration:**
+   - Automatically enqueues notifications in `notification_outbox` for unit members on proposal initiation, acceptance, rejection, and cancellation without premature delivery before transaction commit.
+6. **Frontend Transfer Management Suite:**
+   - `AICTETransferQueue.tsx`: Central queue with Incoming and Outgoing tabs, status filters, search, and quick decision modals.
+   - `AICTECaseDetail.tsx` Integration: "Initiate Transfer" action button, active `TRANSFER_PENDING` alert banner, and complete "Inter-Bureau Transfer Ledger" history card.
+   - `InitiateTransferModal.tsx`: Destination unit selector, receiving officer selector (filtered by destination membership), substantive reason, and statutory handover checklist.
+   - `TransferDecisionModal.tsx`: Modal supporting Accept, Reject (with mandatory reason), and Cancel actions with double-confirmation.
+   - `AICTEIntegratedDashboard.tsx`: Live counter and quick link to Pending Incoming Transfers.
+   - `Sidebar.tsx`: Navigation link for Regulatory Admin and Super Admin to `/aicte/transfers`.
+7. **Automated Verification:**
+   - Dedicated suite `test_step7_phase_e_aicte_transfers.py` covering all 14 core transfer lifecycle and concurrency requirements (100% passing against XAMPP MySQL `eduresolve_ai_test`).
+   - Complete backend regression suite: **138 tests passed, 0 failed in 32.37s**.
+   - Frontend production build: `npm run build` completed with **0 errors**.
+
+
 

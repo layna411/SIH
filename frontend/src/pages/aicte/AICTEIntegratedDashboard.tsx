@@ -26,6 +26,7 @@ export const AICTEIntegratedDashboard: React.FC = () => {
   const [awaitingCount, setAwaitingCount] = useState(0);
   const [disposedCount, setDisposedCount] = useState(0);
   const [pendingOverlapsCount, setPendingOverlapsCount] = useState(0);
+  const [pendingTransfersCount, setPendingTransfersCount] = useState(0);
   const [unitMetrics, setUnitMetrics] = useState<{ code: string; name: string; count: number }[]>([]);
   const [institutionSearch, setInstitutionSearch] = useState('');
   const [loading, setLoading] = useState(true);
@@ -44,17 +45,19 @@ export const AICTEIntegratedDashboard: React.FC = () => {
       setRecentCases(res.cases || []);
       setTotalCases(res.total || 0);
 
-      // 2. Fetch status breakdown counts + pending overlaps
-      const [underProcRes, awaitingRes, disposedRes, overlapsRes] = await Promise.all([
+      // 2. Fetch status breakdown counts + pending overlaps + pending transfers
+      const [underProcRes, awaitingRes, disposedRes, overlapsRes, transfersRes] = await Promise.all([
         api.get<AICTECaseListResponse>('/aicte/cases?status_filter=UNDER_PROCESS&page_size=1'),
         api.get<AICTECaseListResponse>('/aicte/cases?status_filter=AWAITING_RESPONSE&page_size=1'),
         api.get<AICTECaseListResponse>('/aicte/cases?status_filter=DISPOSED&page_size=1'),
         api.get<{ total: number }>('/aicte/overlaps?review_status=PENDING&page_size=1').catch(() => ({ total: 0 })),
+        api.get<{ total: number }>('/aicte/transfers/incoming?status=PENDING_ACCEPTANCE&page_size=1').catch(() => ({ total: 0 })),
       ]);
       setUnderProcessCount(underProcRes.total || 0);
       setAwaitingCount(awaitingRes.total || 0);
       setDisposedCount(disposedRes.total || 0);
       setPendingOverlapsCount(overlapsRes.total || 0);
+      setPendingTransfersCount(transfersRes.total || 0);
 
       // 3. Fetch active units for metrics
       const unitsRes = await api.get<{ units: { id: number; code: string; name: string }[] }>('/aicte/organizational-units');
@@ -126,6 +129,13 @@ export const AICTEIntegratedDashboard: React.FC = () => {
             <RefreshCw className="w-3.5 h-3.5" />
             Refresh
           </button>
+          <Link
+            to="/aicte/transfers"
+            className="flex items-center gap-1.5 px-3.5 py-2 border border-slate-200 text-slate-700 bg-white text-xs font-semibold rounded-xl hover:bg-slate-50 transition shadow-sm"
+          >
+            <ArrowRightLeft className="w-4 h-4 text-purple-600" />
+            Transfers {pendingTransfersCount > 0 && <span className="bg-purple-100 text-purple-800 text-[10px] px-1.5 py-0.2 rounded-full font-bold">{pendingTransfersCount}</span>}
+          </Link>
           <button
             onClick={() => setIsReferOpen(true)}
             className="flex items-center gap-1.5 px-3.5 py-2 border border-purple-200 text-purple-700 bg-purple-50 text-xs font-semibold rounded-xl hover:bg-purple-100 transition shadow-sm"

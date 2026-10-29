@@ -486,24 +486,71 @@ flowchart TD
 
 ### Phase D: Overlap Detection, Related-Case Linking, and Human Review
 - **Primary Goal:** Implement automated cross-bureau overlap detection, privacy-preserving alerts, and human review actions.
-- **Dependencies:** Phase C.
-- **Expected Files:**
-  - AI Service: `ai-service/similarity/cross_bureau_overlap.py`
-  - Backend: `backend/app/models/case_overlap.py`, `backend/app/models/case_link.py`
-  - Backend: `backend/app/services/overlap_service.py`
+- **Migration Revision:** `e9f34a5b6c7d` (Parent: `d8c23e4f5a6b`)
+- **Status:** **PHASE D COMPLETED**
+- **Delivered Files:**
+  - AI Service / Algorithm: `backend/app/services/aicte_overlap_service.py` (Multi-signal similarity engine)
+  - Backend: `backend/app/models/aicte_overlap.py` (`AICTECaseOverlap` and `AICTECaseLink`)
+  - Backend: `backend/app/schemas/aicte_overlap.py`
   - Backend: `backend/app/api/v1/aicte_overlaps.py`
-- **API Changes:**
+  - Frontend: `frontend/src/pages/aicte/AICTEOverlapQueue.tsx`
+  - Frontend: `frontend/src/pages/aicte/AICTEOverlapDetail.tsx`
+  - Frontend: `frontend/src/pages/aicte/AICTECaseRelationships.tsx`
+  - Tests: `backend/app/tests/test_step7_phase_d_overlap_detection.py` (10 tests, 100% passing)
+- **API Endpoints:**
   - `POST /api/v1/aicte/cases/{id}/detect-overlaps` (run cross-bureau overlap detection)
   - `GET /api/v1/aicte/overlaps/pending` (queue of unreviewed cross-bureau overlap alerts)
-  - `POST /api/v1/aicte/overlaps/{id}/review` (confirm or dismiss match)
-  - `POST /api/v1/aicte/cases/{id}/links` (link cases for coordinated hearing)
-- **Database Changes:**
-  - Create table `case_overlaps`.
-  - Create table `case_links`.
-- **Acceptance Criteria:**
-  - Concurrent active cases for the same institution in RB and PGRC trigger an overlap alert.
-  - Overlap alerts display explainable similarity rationale while redacting private complainant data across bureaus.
-  - Human officers can confirm or dismiss alerts; dockets are never automatically merged.
+  - `GET /api/v1/aicte/overlaps/{id}` (detailed overlap report with similarity breakdown)
+  - `POST /api/v1/aicte/overlaps/{id}/review` (confirm or dismiss match with mandatory notes)
+  - `POST /api/v1/aicte/cases/{id}/links` (link cases without merging dockets)
+  - `GET /api/v1/aicte/cases/{id}/links` (list linked cases)
+- **Database Schema Changes:**
+  - Created table `aicte_case_overlaps` with unique canonical pair constraint `case_a_id < case_b_id`.
+  - Created table `aicte_case_links` for administrative linking.
+- **Acceptance Verification:**
+  - 124 backend tests passing cleanly against `eduresolve_ai_test` in XAMPP MySQL.
+
+---
+
+### Phase E: Formal Inter-Bureau Transfer, Acceptance and Rejection Workflow
+- **Primary Goal:** Implement a formal, auditable inter-Bureau case transfer workflow across AICTE organizational units (Regulation Bureau [RB], Public Grievance Redressal Cell [PGRC], Approval Bureau [AB], and Regional Offices).
+- **Migration Revision:** `f0a45b6c7d8e` (Parent: `e9f34a5b6c7d`)
+- **Status:** **PHASE E COMPLETED**
+- **Delivered Files:**
+  - Backend Migration: `backend/alembic/versions/f0a45b6c7d8e_step7_phase_e_aicte_case_transfers.py`
+  - Backend Model: `backend/app/models/aicte_transfer.py` (`AICTECaseTransfer`)
+  - Backend Schemas: `backend/app/schemas/aicte_transfer.py` (Pydantic v2 schemas)
+  - Backend Service: `backend/app/services/aicte_transfer_service.py` (`AICTETransferService`)
+  - Backend API: `backend/app/api/v1/aicte_transfers.py` (mounted at `/api/v1/aicte`)
+  - Direct Assignment Protection: `backend/app/api/v1/aicte_cases.py` (guarded `/cases/{id}/assign` against bypassing transfers)
+  - Tests: `backend/app/tests/test_step7_phase_e_aicte_transfers.py` (14 tests, 100% passing)
+  - Frontend Types: `frontend/src/types/index.ts`
+  - Frontend Modals: `frontend/src/pages/aicte/InitiateTransferModal.tsx`, `frontend/src/pages/aicte/TransferDecisionModal.tsx`
+  - Frontend Pages: `frontend/src/pages/aicte/AICTETransferQueue.tsx`
+  - Frontend Enhancements: `frontend/src/pages/aicte/AICTECaseDetail.tsx` (Transfer ledger & banner), `frontend/src/pages/aicte/AICTEIntegratedDashboard.tsx`, `frontend/src/components/common/Sidebar.tsx`
+- **Implemented API Endpoints:**
+  - `POST /api/v1/aicte/cases/{case_id}/transfers` (initiate transfer proposal)
+  - `GET /api/v1/aicte/cases/{case_id}/transfers` (retrieve case transfer history)
+  - `GET /api/v1/aicte/transfers/incoming` (paginated incoming queue for destination bureau)
+  - `GET /api/v1/aicte/transfers/outgoing` (paginated outgoing queue for originating bureau)
+  - `GET /api/v1/aicte/transfers/{transfer_id}` (detailed transfer proposal and context)
+  - `POST /api/v1/aicte/transfers/{transfer_id}/accept` (atomically accept transfer & reassign unit/officer)
+  - `POST /api/v1/aicte/transfers/{transfer_id}/reject` (reject with required reason & restore prior status)
+  - `POST /api/v1/aicte/transfers/{transfer_id}/cancel` (withdraw proposal before decision)
+- **Database Schema Changes:**
+  - Created table `aicte_case_transfers` with foreign keys to `aicte_cases`, `organizational_units` (`from_unit_id`, `to_unit_id`), and `users`.
+  - Added Check Constraint `ck_case_transfer_distinct_units` (`from_unit_id != to_unit_id`).
+  - Added new enum values: `AICTETransferStatusEnum` (`PENDING_ACCEPTANCE`, `ACCEPTED`, `REJECTED`, `CANCELLED`), and `AICTECaseActionTypeEnum` additions (`TRANSFER_REJECTED`, `TRANSFER_CANCELLED`).
+- **Transfer Lifecycle Invariants:**
+  1. *Transfer is a controlled handover of responsibility* — not a merge, disposal, or deletion.
+  2. *Originating Bureau retains responsibility until acceptance* — `case.current_unit_id` and assigned officer remain unchanged while status is `TRANSFER_PENDING`.
+  3. *Exact prior status restoration* — on rejection or cancellation, `case.status` is restored to `prior_case_status` (not defaulted to `UNDER_PROCESS`).
+  4. *Row-level concurrency locks & duplicate prevention* — prevents simultaneous accept/reject races and duplicate pending proposals (HTTP 409).
+  5. *Notification outbox integration* — transactionally queues notification events without leaking confidential narratives across bureaus.
+- **Acceptance Verification:**
+  - 14 dedicated Phase E tests passing cleanly against `eduresolve_ai_test` in XAMPP MariaDB.
+  - Full backend regression suite: **138 tests passing (100%), 0 failures**.
+  - Frontend production build (`npm run build`): Exit code 0, 0 TypeScript errors.
 
 ---
 

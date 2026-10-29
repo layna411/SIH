@@ -23,7 +23,8 @@ import {
   Send,
   Ban,
   Check,
-  X
+  X,
+  ShieldAlert
 } from 'lucide-react';
 
 export const AICTECaseDetail: React.FC = () => {

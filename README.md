@@ -431,7 +431,7 @@ Run the backend test suite using `pytest`:
 .\venv\Scripts\pytest backend\app\tests -v
 ```
 
-**Test Coverage Highlights (94 Passing Tests against XAMPP MySQL `eduresolve_ai_test`)**:
+**Test Coverage Highlights (138 Passing Tests against XAMPP MySQL `eduresolve_ai_test`)**:
 - **Health Endpoints**: `/api/health`, `/api/health/db`, `/api/v1/ai/health`, `/api/v1/ai/readiness`
 - **Email Verification & Account Security (Step 6)**:
   - Cryptographically secure verification token generation and SHA-256 database hashing
@@ -481,10 +481,15 @@ Run the backend test suite using `pytest`:
 - **Security & RBAC**: Argon2id password hashing, JWT expiration, IDOR prevention, and cross-tenant boundary protections
 - **Grievance State Machine**: Formal 11-stage status transitions, mandatory reasons, atomic audit logging, internal confidential notes, and two-way messaging
 - **Attachments & SLAs**: Authenticated document storage and automatic overdue escalation batch services
+- **AICTE Cross-Bureau Suite (Step 7 — Phases B, C, D & E - 44 Comprehensive Tests)**:
+  - Phase B (10 tests): Institution identity extension, AICTE Permanent ID verification, institutional aliases, organizational units, and bureau memberships.
+  - Phase C (10 tests): AICTE case lifecycle state machine, direct intake, procedural milestone ledger (`case_actions`), campus referral workflow, and consolidated profile.
+  - Phase D (10 tests): Overlap detection, candidate bounding, multi-signal scoring, narrative shielding, human review decisions, and non-destructive case linking.
+  - Phase E (14 tests): Formal inter-bureau transfer proposals, receiving unit acceptance, mandatory rejection reasons, exact prior status restoration, cancellation, row-level locking, duplicate prevention, direct assignment guard, and outbox notification queuing.
 
 ---
 
-## 🏛️ AICTE Cross-Bureau Case Management (Step 7 — Phase B & Phase C Completed)
+## 🏛️ AICTE Cross-Bureau Case Management (Step 7 — Phases B, C, D & E Completed)
 
 EduResolve AI features an integrated architecture for cross-bureau complaint case tracking across AICTE autonomous Bureaus, Cells, and Regional Offices:
 
@@ -507,14 +512,6 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - Controlled workflow referring existing campus grievances to an AICTE Bureau docket with duplicate prevention and audit logging.
 - **Consolidated Institution Profile (Phase C)**:
   - Cross-bureau institution profile displaying AICTE PID, verified status, aliases, multi-bureau metrics, active/disposed breakdown, and complete case docket.
-- **Frontend AICTE Suite (Phase C & D)**:
-  - AICTE Integrated Dashboard (`/aicte`)
-  - AICTE Case Directory (`/aicte/cases`)
-  - AICTE Case Docket & Action History (`/aicte/cases/:id`)
-  - AICTE Consolidated Institution Profile (`/aicte/institutions/:id`)
-  - AICTE Cross-Bureau Overlap Queue (`/aicte/overlaps`)
-  - AICTE Overlap Detailed Comparison & Signals (`/aicte/overlaps/:id`)
-  - AICTE Case Relationships & Overlap Scan component embedded in Case Detail
 - **Cross-Bureau Overlap Detection & Case Linking (Phase D)**:
   - `aicte_case_overlaps` table: Bounded candidate generation comparing institutional dockets across Bureaus/Cells.
   - Multi-signal explainability engine: Jaccard + Cosine subject similarity, Cosine description similarity, category concord, cross-bureau flags, official reference matching, temporal proximity, and allegation keywords.
@@ -522,10 +519,27 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - Re-detection Idempotency: Re-evaluations update detection metadata but never overwrite human decisions.
   - `aicte_case_links` table: Administrative linking (`DUPLICATE_OF`, `RELATED_TO`) maintaining independent case dockets, references, and statuses without auto-merging.
   - Cross-Bureau Narrative Shielding: Masks confidential complainant details and descriptions across bureau boundaries for unprivileged officers.
+- **Formal Inter-Bureau Transfer Workflow (Phase E)**:
+  - `aicte_case_transfers` table: Auditable handover ledger with `from_unit_id`, `to_unit_id`, `transfer_status` (`PENDING_ACCEPTANCE`, `ACCEPTED`, `REJECTED`, `CANCELLED`), required substantive reason, confidential handover summary, and prior status tracking.
+  - Originating Unit Responsibility Invariant: `case.current_unit_id` and assigned officer remain unchanged while status is `TRANSFER_PENDING` until the destination bureau formally accepts.
+  - Exact Prior Status Restoration: On rejection or cancellation, case returns to its specific recorded `prior_case_status` (e.g. `UNDER_PROCESS`), preventing inaccurate status resets.
+  - Concurrency Safeguards: Row-level locking (`with_for_update()`) and state validation prevent concurrent accept/reject races. Active pending duplicates return `HTTP 409 Conflict`.
+  - Direct Assignment Guard: `/cases/{id}/assign` forbids changing `current_unit_id` for non-SuperAdmin users, preventing bypass of the formal transfer workflow.
+  - Outbox Notification Integration: Dispatches notification events to affected Bureau members transactionally.
+- **Frontend AICTE Suite (Phases C, D & E)**:
+  - AICTE Integrated Dashboard (`/aicte`) with incoming transfer alerts
+  - AICTE Case Directory (`/aicte/cases`)
+  - AICTE Case Docket & Action History (`/aicte/cases/:id`) with transfer action modal, active transfer banner, and transfer history ledger
+  - AICTE Inter-Bureau Transfer Queue (`/aicte/transfers`) with incoming/outgoing queues, status filters, and decision modal
+  - AICTE Consolidated Institution Profile (`/aicte/institutions/:id`)
+  - AICTE Cross-Bureau Overlap Queue (`/aicte/overlaps`)
+  - AICTE Overlap Detailed Comparison & Signals (`/aicte/overlaps/:id`)
+  - AICTE Case Relationships & Overlap Scan component embedded in Case Detail
 - **Alembic Migration History**:
   - Phase B: `c7b12d3e4f5a` (Parent: `59f5f8fb2f6b`)
   - Phase C: `d8c23e4f5a6b` (Parent: `c7b12d3e4f5a`)
   - Phase D: `e9f34a5b6c7d` (Parent: `d8c23e4f5a6b`)
+  - Phase E: `f0a45b6c7d8e` (Parent: `e9f34a5b6c7d`)
 
 
 ---
