@@ -620,7 +620,10 @@ class AICTETransferService:
         """List incoming transfer proposals targeted at the user's authorized organizational units."""
         user_units = get_user_bureau_unit_ids(current_user, db)
         if not user_units and current_user.default_role != UserRoleEnum.SUPER_ADMIN:
-            return AICTECaseTransferListResponse(items=[], total=0, page=page, page_size=page_size)
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access forbidden: you do not possess an active AICTE Bureau membership."
+            )
 
         query = db.query(AICTECaseTransfer)
         if current_user.default_role != UserRoleEnum.SUPER_ADMIN:
@@ -646,7 +649,10 @@ class AICTETransferService:
         """List outgoing transfer proposals initiated from the user's authorized organizational units."""
         user_units = get_user_bureau_unit_ids(current_user, db)
         if not user_units and current_user.default_role != UserRoleEnum.SUPER_ADMIN:
-            return AICTECaseTransferListResponse(items=[], total=0, page=page, page_size=page_size)
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access forbidden: you do not possess an active AICTE Bureau membership."
+            )
 
         query = db.query(AICTECaseTransfer)
         if current_user.default_role != UserRoleEnum.SUPER_ADMIN:

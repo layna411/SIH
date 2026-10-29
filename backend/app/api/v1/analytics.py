@@ -140,12 +140,18 @@ def get_dashboard_analytics(
 def sanitize_csv_value(val: any) -> str:
     """
     Prevent CSV Formula Injection (DDE / Spreadsheet command injection).
-    If a string starts with '=', '+', '-', '@', '\t', or '\r', prepends a single quote.
+    If a string starts with '=', '+', '-', '@', '\t', '\r', or '%' (including after leading whitespace),
+    prepends a single quote to neutralize formula execution in spreadsheet applications.
     """
     if val is None:
         return ""
+    if isinstance(val, (int, float)):
+        return str(val)
     s = str(val)
-    if s and s[0] in ("=", "+", "-", "@", "\t", "\r"):
+    if not s:
+        return s
+    stripped = s.lstrip()
+    if (stripped and stripped[0] in ("=", "+", "-", "@", "\t", "\r", "%")) or (s[0] in ("=", "+", "-", "@", "\t", "\r", "%")):
         return f"'{s}"
     return s
 

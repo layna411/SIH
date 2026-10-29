@@ -549,6 +549,13 @@ EduResolve AI features an integrated architecture for cross-bureau complaint cas
   - AICTE Cross-Bureau Overlap Queue (`/aicte/overlaps`)
   - AICTE Overlap Detailed Comparison & Signals (`/aicte/overlaps/:id`)
   - AICTE Case Relationships & Overlap Scan component embedded in Case Detail
+- **Security Hardening, Concurrency & Integration (Phase H)**:
+  - Role & Bureau Boundary Guard: Enforced strict `HTTP 403 Forbidden` across all AICTE regulatory endpoints (`/cases`, `/transfers/incoming`, `/transfers/outgoing`, `/overlaps`, `/alerts/overdue`) for students and unauthorized campus users.
+  - Concurrency & Row-Level Locking: Integrated `with_for_update()` across case updates, assignments, procedural actions, and campus grievance referrals, preventing race conditions and duplicate referrals.
+  - Cross-Bureau Narrative Confidentiality: Shielded confidential complainant details and raw narratives (`[CONFIDENTIAL: ...]`, `[PROTECTED]`) in cross-bureau overlap views for unprivileged officers.
+  - Advanced CSV Formula Injection Neutralization: Enhanced `sanitize_csv_value` to detect formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`, `%`) even when preceded by leading whitespace (spaces, tabs, carriage returns) while preserving legitimate numbers.
+  - Notification IDOR Protection: Cross-user notification requests, read updates, and acknowledgements return `HTTP 404 Not Found` without disclosing ownership metadata.
+  - Outbox Retry Bound & Teardown Preservation: Preserved persistent development and test databases on XAMPP MySQL.
 - **Alembic Migration History**:
   - Phase B: `c7b12d3e4f5a` (Parent: `59f5f8fb2f6b`)
   - Phase C: `d8c23e4f5a6b` (Parent: `c7b12d3e4f5a`)

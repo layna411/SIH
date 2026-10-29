@@ -247,7 +247,7 @@ def review_overlap_candidate(
     - If REJECTED: deactivates any existing link; both cases remain completely independent.
     - Preserves audit trail atomically.
     """
-    overlap = db.query(AICTECaseOverlap).filter(AICTECaseOverlap.id == overlap_id).first()
+    overlap = db.query(AICTECaseOverlap).filter(AICTECaseOverlap.id == overlap_id).with_for_update().first()
     if not overlap:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

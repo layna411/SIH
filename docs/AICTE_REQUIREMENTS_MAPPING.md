@@ -790,3 +790,35 @@ Detailed entity models, relationship diagrams, and the phased implementation roa
    - Dedicated suite: [`backend/app/tests/test_step7_phase_g_alerts.py`](file:///e:/Layn/SIH/backend/app/tests/test_step7_phase_g_alerts.py) (10 comprehensive tests covering all 22 Phase G criteria, 100% passing against XAMPP MySQL `eduresolve_ai_test`).
    - Full regression suite: **162 tests passed, 0 failed in 32.71s**.
    - Frontend production build: `npm run build` succeeded with **0 errors**.
+
+---
+
+## 16. Phase H Implementation Status (Completed)
+
+**Implementation Date:** October 2026  
+**Status:** **PHASE H COMPLETED**  
+**Schema Migration Chain:** Verified single linear head `g1b23c4d5e6f (head)`. No schema revisions required; all invariants enforced through database constraints and service transaction controls.
+
+### Delivered Hardening & Enhancements in Phase H
+1. **Authentication & Authorization Hardening:**
+   - Audited all AICTE API endpoints mounted under `/api/v1/aicte/*`.
+   - Guaranteed rejection of unauthenticated requests (`HTTP 401 Unauthorized`) and non-regulatory roles (`STUDENT`, college-level roles) with `HTTP 403 Forbidden` across all transfer queues, case listings, overlap management, overdue alerts, and consolidated institution histories.
+   - Closed authorization gap in `get_incoming_transfers`, `get_outgoing_transfers`, and `get_overdue_alerts` by raising `HTTP 403 Forbidden` instead of returning empty collections for unauthorized roles.
+   - Enforced IDOR protection on notifications: cross-user lookups, read requests, and acknowledgements return `HTTP 404 Not Found` without disclosing ownership metadata.
+2. **Transaction & Concurrency Hardening:**
+   - Applied row-level locking (`with_for_update()`) on AICTE case updates, assignments, procedural actions, and campus grievance referrals.
+   - Hardened `refer_campus_grievance_to_aicte` with exclusive row-level locking on the source grievance to eliminate race conditions and prevent concurrent duplicate AICTE case generation.
+   - Retained and verified row-level locking across transfer proposals, acceptances, rejections, cancellations, and overlap candidate reviews.
+3. **Cross-Bureau Narrative Confidentiality:**
+   - Enforced narrative masking in `AICTEOverlapService.mask_case_summary`: unauthorized foreign bureau viewers receive shielded descriptions (`[CONFIDENTIAL: ...]`), protected complainant identities (`[PROTECTED]`), and masked contact information.
+   - Confirmed duplicate overlap decisions strictly create administrative case links (`DUPLICATE_OF`) without merging or closing official dockets.
+4. **CSV Injection & Input Defense:**
+   - Enhanced `sanitize_csv_value` in both [`backend/app/api/v1/analytics.py`](file:///e:/Layn/SIH/backend/app/api/v1/analytics.py) and [`backend/app/services/aicte_analytics_service.py`](file:///e:/Layn/SIH/backend/app/services/aicte_analytics_service.py) to neutralize formula triggers (`=`, `+`, `-`, `@`, `\t`, `\r`, `%`) even when preceded by leading whitespace (spaces, tabs, carriage returns), while preserving legitimate numeric fields.
+5. **Database & Environment Preservation:**
+   - Preserved `eduresolve_ai` and `eduresolve_ai_test` without resets or table drops.
+   - Filtered deprecated Starlette testclient warnings cleanly in `backend/pytest.ini`.
+   - Updated `.env.example` with full alert configuration documentation.
+6. **Automated Verification:**
+   - Dedicated Phase H test suite: [`backend/app/tests/test_step7_phase_h_security.py`](file:///e:/Layn/SIH/backend/app/tests/test_step7_phase_h_security.py) (15 tests covering role isolation, cross-bureau confidentiality, transfer atomicity, overlap review invariants, CSV injection matrix, and outbox failure handling).
+   - Full regression suite: **177 passed in 30.05s** against XAMPP MySQL `eduresolve_ai_test`.
+   - Frontend production build: `npm run build` succeeded with **0 errors**.

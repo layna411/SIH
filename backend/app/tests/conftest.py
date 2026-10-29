@@ -35,7 +35,9 @@ def setup_test_db():
     finally:
         db.close()
     yield
-    Base.metadata.drop_all(bind=test_engine)
+    # Note: Preserving test database schema and records per mandatory rule:
+    # "Never recreate or reset either database to make tests pass. Preserve all existing records."
+
 
 
 @pytest.fixture

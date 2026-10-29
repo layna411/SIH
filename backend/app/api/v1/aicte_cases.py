@@ -427,7 +427,7 @@ def update_aicte_case(
     current_user: User = Depends(get_current_active_user)
 ):
     """Update permitted metadata on an AICTE case."""
-    case = db.query(AICTECase).filter(AICTECase.id == case_id).first()
+    case = db.query(AICTECase).filter(AICTECase.id == case_id).with_for_update().first()
     if not case:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -481,7 +481,7 @@ def assign_aicte_case(
     - Validates that the assigned officer has an active membership in the responsible unit.
     - Records an ASSIGNMENT action in the procedural action history.
     """
-    case = db.query(AICTECase).filter(AICTECase.id == case_id).first()
+    case = db.query(AICTECase).filter(AICTECase.id == case_id).with_for_update().first()
     if not case:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -581,7 +581,7 @@ def append_case_action(
     - If status change requested, validates lifecycle transition.
     - Commits action and case status atomically.
     """
-    case = db.query(AICTECase).filter(AICTECase.id == case_id).first()
+    case = db.query(AICTECase).filter(AICTECase.id == case_id).with_for_update().first()
     if not case:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -692,14 +692,14 @@ def refer_campus_grievance_to_aicte(
     """
     Controlled referral of an existing campus grievance into the AICTE case system:
     - Verifies caller has permission to refer (SuperAdmin, RegulatoryAdmin, or Officer/Head of institution).
-    - Prevents duplicate referral of the same grievance.
+    - Prevents duplicate referral of the same grievance using row-level locking.
     - Validates destination organizational unit.
     - Creates AICTECase with source_type=CAMPUS_REFERRAL and source_grievance_id.
     - Preserves source grievance status and notes intact.
     - Atomically logs INTAKE action.
     """
-    # 1. Fetch Source Grievance
-    grievance = db.query(Grievance).filter(Grievance.id == payload.source_grievance_id).first()
+    # 1. Fetch Source Grievance with row-level lock
+    grievance = db.query(Grievance).filter(Grievance.id == payload.source_grievance_id).with_for_update().first()
     if not grievance:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,

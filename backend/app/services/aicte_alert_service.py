@@ -840,7 +840,10 @@ class AICTEAlertService:
         if not is_admin and user_units:
             query = query.filter(AICTECase.current_unit_id.in_(user_units))
         elif not is_admin and not user_units:
-            return AICTEOverdueAlertListResponse(items=[], total=0, page=page, page_size=page_size)
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="Access forbidden: you do not possess an active AICTE Bureau membership."
+            )
 
         # Overdue condition: next_action_due_at < now OR expected_disposal_at < now
         query = query.filter(

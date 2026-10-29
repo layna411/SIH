@@ -53,11 +53,21 @@ DISPOSED_STATUSES = [
 ]
 
 def sanitize_csv_value(val: Any) -> str:
-    """Neutralize spreadsheet command injection / DDE attacks."""
+    """
+    Neutralize spreadsheet command injection / DDE attacks across Excel, Calc, Sheets:
+    - Neutralizes formula triggers: '=', '+', '-', '@', '\t', '\r', '%'
+    - Handles leading whitespace (spaces, tabs, carriage returns) before formula prefix
+    - Strings starting with formula triggers get prepended with a single quote (')
+    """
     if val is None:
         return ""
+    if isinstance(val, (int, float)):
+        return str(val)
     s = str(val)
-    if s and s[0] in ("=", "+", "-", "@", "\t", "\r"):
+    if not s:
+        return s
+    stripped = s.lstrip()
+    if (stripped and stripped[0] in ("=", "+", "-", "@", "\t", "\r", "%")) or (s[0] in ("=", "+", "-", "@", "\t", "\r", "%")):
         return f"'{s}"
     return s
 
